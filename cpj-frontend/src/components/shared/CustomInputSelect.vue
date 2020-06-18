@@ -2,7 +2,7 @@
     <div :class="bsColValue">
         <ValidationProvider :name="labelValue" :rules="rolesValue" v-slot="{ errors }">
             <b-form-group :label-for="idValue" :label="label">
-                <b-form-select :id="idValue" v-model="localValue" :options="optionValues" value-field="item"
+                <b-form-select :id="idValue" v-model="localValue" :options="optionValues" value-field="item" :disabled="disabled"
                                text-field="name"/>
                 <span class="c-erro-msg">{{ errors[0] }}</span>
             </b-form-group>
@@ -18,6 +18,7 @@
             labelValue: {type: String, required: true},
             bsColValue: {type: String, default: "col-md-12"},
             optionValues: {type: Array, required: true},
+            disabled: {type: Boolean, default: false},
             rolesValue: String
         },
         computed: {

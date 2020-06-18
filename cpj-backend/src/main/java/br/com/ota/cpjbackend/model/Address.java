@@ -20,6 +20,14 @@ public class Address extends BaseEntity {
     @Size(max = 50)
     private String street;
 
+    @NotBlank
+    @Size(max = 50)
+    private String neighborhood;
+
+    @NotBlank
+    @Size(max = 50)
+    private String complement;
+
     @NotNull
     private int number;
 
@@ -27,7 +35,9 @@ public class Address extends BaseEntity {
     @Size(max = 9)
     private String postalCode;
 
-    @ManyToOne
-    private City city;
+    //    @ManyToOne
+    @NotBlank
+    @Size(max = 50)
+    private String city;
 
 }

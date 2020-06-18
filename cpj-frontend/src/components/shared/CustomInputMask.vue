@@ -2,7 +2,7 @@
     <div :class="bsColValue">
         <ValidationProvider :name="labelValue" :rules="roleValues" v-slot="{ errors }">
             <b-form-group :label-for="idValue" :label="label">
-                <b-form-input :id="idValue" v-model="localValue" type="text" v-mask="maskValue"/>
+                <b-form-input :id="idValue" v-model="localValue" type="text" v-mask="maskValue" :disabled="disabled" v-on:change="chamaMetodo"/>
                 <span class="c-erro-msg">{{ errors[0] }}</span>
             </b-form-group>
         </ValidationProvider>
@@ -17,6 +17,7 @@
             maskValue: {type: String, required: true},
             labelValue: {type: String, required: true},
             bsColValue: {type: String, default: "col-md-12"},
+            disabled: {type: Boolean, default: false},
             required: {type: Boolean, default: false}
         },
         computed: {
@@ -36,6 +37,11 @@
                 set(localValue) {
                     this.$emit('input', localValue)
                 }
+            }
+        },
+        methods: {
+            chamaMetodo() {
+                console.log("muddeded")
             }
         },
         watch: {

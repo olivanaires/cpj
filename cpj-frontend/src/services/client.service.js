@@ -6,7 +6,6 @@ const API_URL = '/api/client/';
 class ClientService {
 
     create(client) {
-        console.log(client)
         return axios.post(API_URL + 'create', client, {headers: authHeader()});
     }
 

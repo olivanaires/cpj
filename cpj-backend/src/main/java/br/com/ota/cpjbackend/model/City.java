@@ -24,4 +24,8 @@ public class City extends BaseEntity {
     @ManyToOne
     private State state;
 
+    public City(String name) {
+        this.name = name;
+    }
+
 }

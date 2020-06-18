@@ -1,8 +1,10 @@
 export default class Address {
-    constructor(street, number, postalCode, city) {
+    constructor(street, number, postalCode, city, neighborhood, complement) {
+        this.postalCode = postalCode;
         this.street = street;
         this.number = number;
-        this.postalCode = postalCode;
+        this.neighborhood = neighborhood;
         this.city = city;
+        this.complement = complement;
     }
 }
