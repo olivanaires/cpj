@@ -1,4 +1,4 @@
-package br.com.ota.cpjbackend.configuration;
+package br.com.ota.cpjbackend.configuration.util;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

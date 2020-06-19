@@ -1,5 +1,6 @@
 package br.com.ota.cpjbackend.configuration;
 
+import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.exception.ResourceNotFoundException;
 import br.com.ota.cpjbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

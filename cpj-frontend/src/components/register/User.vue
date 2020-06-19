@@ -1,69 +1,89 @@
 <template>
-    <div class="col-md-12">
-        Cadastro Usuário
-        <div class="card card-container">
-            <img
-                    id="profile-img"
-                    src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-                    class="profile-img-card"
-            />
-            <form name="form" @submit.prevent="handleRegister">
-                <div v-if="!successful">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input id="username"
-                               v-model="user.username"
-                               type="text"
-                               class="form-control"
-                               name="username"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input id="email"
-                               v-model="user.email"
-                               type="email"
-                               class="form-control"
-                               name="email"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input id="password"
-                               v-model="user.password"
-                               type="password"
-                               class="form-control"
-                               name="password"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary btn-block">Salvar</button>
-                    </div>
-                </div>
-            </form>
+    <b-row align-h="center">
+        <b-card :header="title" header-class="header-title" class="col-md-6">
+            <b-card-body>
 
-            <div
-                    v-if="message"
-                    class="alert"
-                    :class="successful ? 'alert-success' : 'alert-danger'"
-            >{{message}}
-            </div>
-        </div>
-    </div>
+                <b-alert :show="dismissCountDown"
+                         dismissible
+                         :variant="alertType"
+                         @dismissed="dismissCountDown=0"
+                         @dismiss-count-down="countDownChanged">
+                    {{message}}
+                </b-alert>
+                <ValidationObserver v-slot="{ invalid }">
+                    <img id="profile-img"
+                         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                         class="profile-img-card"/>
+                    <b-form name="form" @submit.prevent="handleRegister">
+
+                        <b-form-row>
+                            <c-input-text label-value="Username" v-model="user.username"
+                                          bs-col-value="col-md-6" roles-value="required"/>
+                            <c-input-select label-value="Papel" v-model="user.role" :option-values="roleOptions"
+                                            bs-col-value="col-md-6" roles-value="required"/>
+                        </b-form-row>
+
+                        <b-form-row>
+                            <c-input-text label-value="E-Mail" v-model="user.email"
+                                          bs-col-value="col-md-12" roles-value="required|email"/>
+                        </b-form-row>
+
+                        <b-form-row>
+                            <div class="col-md-6">
+                                <ValidationProvider name="Senha *" rules="required|min:6|confirmed:passwordConfirmation"
+                                                    v-slot="{ errors }">
+                                    <b-form-group label-for="input-senha" label="Senha">
+                                        <b-form-input id="input-senha" v-model="user.password" type="password"/>
+                                        <span class="c-erro-msg">{{ errors[0] }}</span>
+                                    </b-form-group>
+                                </ValidationProvider>
+                            </div>
+
+                            <div class="col-md-6">
+                                <ValidationProvider v-slot="{ errors }" vid="passwordConfirmation">
+                                    <b-form-group label-for="input-senha-c" label="Confirmação Senha *">
+                                        <b-form-input id="input-senha-passwordConfirmation"
+                                                      v-model="passwordConfirmation"
+                                                      type="password"/>
+                                        <span class="c-erro-msg">{{ errors[0] }}</span>
+                                    </b-form-group>
+                                </ValidationProvider>
+                            </div>
+                        </b-form-row>
+
+                        <b-row align-h="center">
+                            <b-button class="col-md-2" type="submit" :disabled="invalid" variant="success">Salvar
+                            </b-button>
+                        </b-row>
+
+                    </b-form>
+                </ValidationObserver>
+            </b-card-body>
+        </b-card>
+    </b-row>
 </template>
 
 <script>
-    import UserService from '../../services/client.service'
+    import UserService from '../../services/user.service'
     import User from '../../models/user';
 
     export default {
         name: 'Register',
         data() {
             return {
-                user: new User('', '', '', ''),
+                title: 'Cadastrar Usuário',
+                user: new User('ROLE_USER', '', '', ''),
+                passwordConfirmation: '',
                 submitted: false,
-                successful: false,
-                message: ''
+                alertType: '',
+                message: '',
+                dismissSecs: 5,
+                dismissCountDown: 0,
+                showDismissibleAlert: false,
+                roleOptions: [
+                    {item: 'ROLE_USER', name: 'Usuário'},
+                    {item: 'ROLE_LAWYER', name: 'Advogado'}
+                ]
             };
         },
         computed: {
@@ -71,55 +91,38 @@
                 return this.$store.state.auth.status.loggedIn;
             }
         },
-        mounted() {
-            // if (this.loggedIn) {
-            //     this.$router.push('/profile');
-            // }
-        },
         methods: {
             handleRegister() {
                 this.message = '';
                 this.submitted = true;
-                UserService.user(this.user).then(
-                    data => {
-                        this.message = data.message;
-                        this.successful = true;
+                UserService.create(this.user).then(
+                    result => {
+                        this.message = result.data.message;
+                        this.user = new User('ROLE_USER', '', '', '');
+                        this.passwordConfirmation = '';
+                        this.alertType = 'success';
+                        this.dismissCountDown = this.dismissSecs
                     },
                     error => {
                         this.message =
                             (error.response && error.response.data) ?
                                 error.response.data.message :
                                 error.toString();
-                        this.successful = false;
-                    }
-                );
+                        this.alertType = 'danger';
+                        this.dismissCountDown = this.dismissSecs;
+                    });
+            },
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown
             }
         }
     };
 </script>
 
 <style scoped>
-    label {
-        display: block;
-        margin-top: 10px;
-    }
-
-    .card-container.card {
-        max-width: 350px !important;
-        padding: 40px 40px;
-    }
 
     .card {
-        background-color: #f7f7f7;
-        padding: 20px 25px 30px;
-        margin: 0 auto 25px;
-        margin-top: 50px;
-        -moz-border-radius: 2px;
-        -webkit-border-radius: 2px;
-        border-radius: 2px;
-        -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-        -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 0px !important;
     }
 
     .profile-img-card {
@@ -130,5 +133,18 @@
         -moz-border-radius: 50%;
         -webkit-border-radius: 50%;
         border-radius: 50%;
+    }
+
+    span.c-erro-msg {
+        color: #cc0033;
+        display: inline-block;
+        font-size: 12px;
+        line-height: 15px;
+        margin: 0;
+    }
+
+    .header-title {
+        font-size: 25px !important;
+        text-align: center;
     }
 </style>

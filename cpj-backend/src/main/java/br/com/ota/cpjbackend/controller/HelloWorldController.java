@@ -1,6 +1,6 @@
 package br.com.ota.cpjbackend.controller;
 
-import br.com.ota.cpjbackend.configuration.MessageProperty;
+import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

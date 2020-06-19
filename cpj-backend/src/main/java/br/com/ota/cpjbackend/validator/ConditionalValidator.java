@@ -1,6 +1,6 @@
 package br.com.ota.cpjbackend.validator;
 
-import br.com.ota.cpjbackend.configuration.MessageProperty;
+import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.model.annotation.Conditional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanWrapperImpl;

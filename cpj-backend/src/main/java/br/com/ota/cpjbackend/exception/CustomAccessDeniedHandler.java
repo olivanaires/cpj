@@ -1,6 +1,6 @@
 package br.com.ota.cpjbackend.exception;
 
-import br.com.ota.cpjbackend.configuration.MessageProperty;
+import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

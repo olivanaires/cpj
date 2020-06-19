@@ -1,22 +1,23 @@
 package br.com.ota.cpjbackend.controller;
 
-import br.com.ota.cpjbackend.configuration.MessageProperty;
+import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Role;
 import br.com.ota.cpjbackend.model.User;
 import br.com.ota.cpjbackend.model.enums.RoleName;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
-import br.com.ota.cpjbackend.model.vo.SignUpRequest;
+import br.com.ota.cpjbackend.model.vo.UserRequest;
 import br.com.ota.cpjbackend.repository.RoleRepository;
 import br.com.ota.cpjbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -31,28 +32,40 @@ public class UserController {
 
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserRequest userRequest) {
+        if (userRepository.existsByUsername(userRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new AppException(messageProperty.getMessage("user.already.registered")));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new AppException(messageProperty.getMessage("email.already.registered")));
         }
 
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+        User user = new User(userRequest.getUsername(),
+                userRequest.getEmail(),
+                encoder.encode(userRequest.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER);
+        Role role = roleRepository.findByName(userRequest.getRole());
 
-        user.setRoles(Collections.singleton(userRole));
+        user.setRoles(Collections.singleton(role));
 
         userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse(messageProperty.getMessage("registered.successs")));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody UserRequest user) {
+        if (!userRepository.existsByUsername(user.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new AppException(messageProperty.getMessage("user.not.found", user.getUsername())));
+        }
+
 
         return ResponseEntity.ok(new MessageResponse(messageProperty.getMessage("registered.successs")));
     }
