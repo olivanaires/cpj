@@ -15,9 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -59,15 +57,18 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(@Valid @RequestBody UserRequest user) {
-        if (!userRepository.existsByUsername(user.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new AppException(messageProperty.getMessage("user.not.found", user.getUsername())));
+    public ResponseEntity<?> update(@RequestBody UserRequest userRequest) {
+        User user = userRepository.findByUsernameOrEmail(userRequest.getUsername(), null).orElse(null);
+
+        if (Objects.isNull(user)) {
+            return ResponseEntity.badRequest()
+                    .body(new AppException(messageProperty.getMessage("user.not.found", userRequest.getUsername())));
         }
 
+        user.setPassword(encoder.encode(userRequest.getPassword()));
+        userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse(messageProperty.getMessage("registered.successs")));
+        return ResponseEntity.ok(new MessageResponse(messageProperty.getMessage("updated.successs", "password")));
     }
 
 }

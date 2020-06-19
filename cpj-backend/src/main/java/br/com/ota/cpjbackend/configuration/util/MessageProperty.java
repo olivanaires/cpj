@@ -1,6 +1,7 @@
 package br.com.ota.cpjbackend.configuration.util;
 
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 
 import java.util.Objects;
 
@@ -16,6 +17,13 @@ public class MessageProperty {
         String message = this.messageSource.getMessage(key, null, null);
         if (args.length > 0 && Objects.nonNull(message)) {
             for (int i = 0; i < args.length; i++) {
+
+                String arg;
+                try {
+                    arg = this.messageSource.getMessage(args[i], null, null);
+                } catch (NoSuchMessageException ex) {
+                    arg = args[i];
+                }
                 message = message.replace("{" + i + "}", args[i]);
             }
         }

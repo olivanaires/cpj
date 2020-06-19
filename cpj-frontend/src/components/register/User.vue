@@ -74,7 +74,6 @@
                 title: 'Cadastrar Usuário',
                 user: new User('ROLE_USER', '', '', ''),
                 passwordConfirmation: '',
-                submitted: false,
                 alertType: '',
                 message: '',
                 dismissSecs: 5,
@@ -94,7 +93,6 @@
         methods: {
             handleRegister() {
                 this.message = '';
-                this.submitted = true;
                 UserService.create(this.user).then(
                     result => {
                         this.message = result.data.message;
