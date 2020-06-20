@@ -1,12 +1,5 @@
 <template>
     <div class="container">
-        <b-alert :show="dismissCountDown"
-                 dismissible
-                 :variant="alertType"
-                 @dismissed="dismissCountDown=0"
-                 @dismiss-count-down="countDownChanged">
-            {{message}}
-        </b-alert>
         <header class="jumbotron">
             <h3>
                 <strong>{{currentUser.username}}</strong> Profile
@@ -72,12 +65,7 @@
             return {
                 title: 'Atualizar Senha',
                 password: '',
-                passwordConfirmation: '',
-                alertType: '',
-                message: '',
-                dismissSecs: 5,
-                dismissCountDown: 0,
-                showDismissibleAlert: false
+                passwordConfirmation: ''
             }
         },
         computed: {
@@ -88,20 +76,13 @@
         methods: {
             handleForm() {
                 UserService.update(this.$store.state.auth.user.username, this.password).then(
-                    success => {
-                        this.message = success.data.message;
-                        this.alertType = 'success';
-                        this.dismissCountDown = this.dismissSecs
+                    result => {
+                        this.$swal({icon: 'success', title: result.data.message});
                     },
                     error => {
-                        this.message = error.response.data.message;
-                        this.alertType = 'danger';
-                        this.dismissCountDown = this.dismissSecs
+                        this.$swal({icon: 'error', title: error.response.data.message});
                     }
                 );
-            },
-            countDownChanged(dismissCountDown) {
-                this.dismissCountDown = dismissCountDown
             }
         },
         mounted() {

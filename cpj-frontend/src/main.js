@@ -10,10 +10,8 @@ import {ValidationObserver, ValidationProvider, extend, localize} from 'vee-vali
 import pt from 'vee-validate/dist/locale/pt_BR.json';
 import * as rules from 'vee-validate/dist/rules';
 import { VueMaskDirective } from 'v-mask'
-import CustomInputText from "./components/shared/CustomInputText";
-import CustomInputMask from "./components/shared/CustomInputMask";
-import CustomInputSelect from "./components/shared/CustomInputSelect";
-import ComponentAddress from "./components/shared/ComponentAddress";
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
@@ -23,6 +21,10 @@ import {
     faSignInAlt,
     faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
+import CustomInputText from "./components/shared/CustomInputText";
+import CustomInputMask from "./components/shared/CustomInputMask";
+import CustomInputSelect from "./components/shared/CustomInputSelect";
+import ComponentAddress from "./components/shared/ComponentAddress";
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 Object.keys(rules).forEach(rule => extend(rule, rules[rule]));
@@ -44,6 +46,15 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+
+const sweetAlertOptions = {
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500,
+    
+}
+Vue.use(VueSweetalert2, sweetAlertOptions);
+
 
 new Vue({
     router,

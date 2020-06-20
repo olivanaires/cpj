@@ -2,14 +2,6 @@
     <b-row align-h="center">
         <b-card :header="title" header-class="header-title" class="col-md-6">
             <b-card-body>
-
-                <b-alert :show="dismissCountDown"
-                         dismissible
-                         :variant="alertType"
-                         @dismissed="dismissCountDown=0"
-                         @dismiss-count-down="countDownChanged">
-                    {{message}}
-                </b-alert>
                 <ValidationObserver v-slot="{ invalid }">
                     <img id="profile-img"
                          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
@@ -74,11 +66,6 @@
                 title: 'Cadastrar Usuário',
                 user: new User('ROLE_USER', '', '', ''),
                 passwordConfirmation: '',
-                alertType: '',
-                message: '',
-                dismissSecs: 5,
-                dismissCountDown: 0,
-                showDismissibleAlert: false,
                 roleOptions: [
                     {item: 'ROLE_USER', name: 'Usuário'},
                     {item: 'ROLE_LAWYER', name: 'Advogado'}
@@ -92,26 +79,15 @@
         },
         methods: {
             handleRegister() {
-                this.message = '';
                 UserService.create(this.user).then(
                     result => {
-                        this.message = result.data.message;
                         this.user = new User('ROLE_USER', '', '', '');
                         this.passwordConfirmation = '';
-                        this.alertType = 'success';
-                        this.dismissCountDown = this.dismissSecs
+                        this.$swal({icon: 'success', title: result.data.message});
                     },
                     error => {
-                        this.message =
-                            (error.response && error.response.data) ?
-                                error.response.data.message :
-                                error.toString();
-                        this.alertType = 'danger';
-                        this.dismissCountDown = this.dismissSecs;
+                        this.$swal({icon: 'error', title: error.response.data.message});
                     });
-            },
-            countDownChanged(dismissCountDown) {
-                this.dismissCountDown = dismissCountDown
             }
         }
     };
