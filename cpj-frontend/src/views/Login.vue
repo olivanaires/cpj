@@ -8,34 +8,24 @@
             />
             <form name="form" @submit.prevent="handleLogin">
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username">Username *</label>
                     <input id="username"
-                            v-model="user.username"
-
-                            type="text"
-                            class="form-control"
-                            name="username"
+                           v-model="user.username"
+                           type="text"
+                           required
+                           class="form-control"
+                           name="username"
                     />
-<!--                    <div-->
-<!--                            v-if="errors.has('username')"-->
-<!--                            class="alert alert-danger"-->
-<!--                            role="alert"-->
-<!--                    >Username is required!</div>-->
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">Password *</label>
                     <input id="password"
-                            v-model="user.password"
-
-                            type="password"
-                            class="form-control"
-                            name="password"
+                           v-model="user.password"
+                           type="password"
+                           required
+                           class="form-control"
+                           name="password"
                     />
-<!--                    <div-->
-<!--                            v-if="errors.has('password')"-->
-<!--                            class="alert alert-danger"-->
-<!--                            role="alert"-->
-<!--                    >Password is required!</div>-->
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-block" :disabled="loading">
@@ -76,26 +66,18 @@
         methods: {
             handleLogin() {
                 this.loading = true;
-                // this.$validator.validateAll().then(isValid => {
-                //     if (!isValid) {
-                //         this.loading = false;
-                //         return;
-                //     }
-
-                    if (this.user.username && this.user.password) {
-                        this.$store.dispatch('auth/login', this.user).then(
-                            () => {
-                                this.$router.push('/profile');
-                            },
-                            error => {
-                                this.loading = false;
-                                this.message =
-                                    (error.response && error.response.data) ||
-                                    error.message ||
-                                    error.toString();
-                            }
-                        );
-                    }
+                if (this.user.username && this.user.password) {
+                    this.$store.dispatch('auth/login', this.user).then(
+                        () => {
+                            this.$router.push('/profile');
+                        },
+                        error => {
+                            console.log(error.response)
+                            this.loading = false;
+                            this.message = error.response.data.message;
+                        }
+                    );
+                }
                 // });
             }
         }
