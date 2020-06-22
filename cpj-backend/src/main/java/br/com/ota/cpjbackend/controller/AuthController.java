@@ -1,6 +1,7 @@
 package br.com.ota.cpjbackend.controller;
 
 import br.com.ota.cpjbackend.configuration.JwtTokenProvider;
+import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
 import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.User;
 import br.com.ota.cpjbackend.model.vo.LoginRequest;
@@ -26,11 +27,11 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
-    private final MessageSource messageSource;
+    private final MessagePropertie messageSource;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try{
+        try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -42,7 +43,7 @@ public class AuthController {
             return ResponseEntity.ok(user);
 
         } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppException(messageSource.getMessage("invalid.user", null, new Locale("pt", "BR"))));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppException(messageSource.getMessage("invalid.user")));
         }
     }
 
