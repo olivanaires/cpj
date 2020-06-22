@@ -72,9 +72,6 @@
                             this.$router.push('/profile');
                         },
                         error => {
-                            console.log(error.response);
-                            console.log(error.response.data);
-                            console.log(error.response.data.message);
                             this.loading = false;
                             this.message = error.response.data.message;
                         }
