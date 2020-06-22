@@ -12,6 +12,7 @@ public class MessageSouceConfiguration {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.addBasenames("classpath:messages");
+        messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
 
