@@ -21,12 +21,12 @@ const routes = [
         component: Login
     },
     {
-        path: '/register/user',
+        path: '/userRegister',
         name: 'user',
         component: () => import('../components/register/User.vue')
     },
     {
-        path: '/register/client',
+        path: '/clientRegister',
         name: 'client',
         component: () => import('../components/register/Client.vue')
     },

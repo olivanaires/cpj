@@ -16,8 +16,8 @@
                             <b-icon icon="person-plus"></b-icon>
                             Cadastro
                         </template>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/register/user">Usuário</b-dropdown-item>
-                        <b-dropdown-item to="/register/client">Cliente</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
+                        <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
 
