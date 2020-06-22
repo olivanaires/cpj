@@ -1,10 +1,8 @@
 package br.com.ota.cpjbackend.controller;
 
-import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Role;
 import br.com.ota.cpjbackend.model.User;
-import br.com.ota.cpjbackend.model.enums.RoleName;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
 import br.com.ota.cpjbackend.model.vo.UserRequest;
 import br.com.ota.cpjbackend.repository.RoleRepository;
@@ -15,7 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+import java.util.Objects;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -26,7 +25,6 @@ public class UserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
-    private final MessageProperty messageProperty;
 
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -34,13 +32,13 @@ public class UserController {
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new AppException(messageProperty.getMessage("user.already.registered")));
+                    .body(new AppException("Usuário já cadastrado."));
         }
 
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new AppException(messageProperty.getMessage("email.already.registered")));
+                    .body(new AppException("E-Mail já esta sendo utilizado por outro Usuário.'"));
         }
 
         User user = new User(userRequest.getUsername(),
@@ -53,7 +51,7 @@ public class UserController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse(messageProperty.getMessage("registered.successs")));
+        return ResponseEntity.ok(new MessageResponse("Usuário cadastrado com sucesso."));
     }
 
     @PostMapping("/update")
@@ -62,13 +60,13 @@ public class UserController {
 
         if (Objects.isNull(user)) {
             return ResponseEntity.badRequest()
-                    .body(new AppException(messageProperty.getMessage("user.not.found", userRequest.getUsername())));
+                    .body(new AppException("Usuário " + userRequest.getUsername() + " não encontrado."));
         }
 
         user.setPassword(encoder.encode(userRequest.getPassword()));
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse(messageProperty.getMessage("updated.successs", "password")));
+        return ResponseEntity.ok(new MessageResponse("Senha alterada com sucesso."));
     }
 
 }

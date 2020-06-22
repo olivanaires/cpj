@@ -1,6 +1,5 @@
 package br.com.ota.cpjbackend.configuration;
 
-import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +18,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
 
-	private final MessageProperty messageProperty;
-
 	@Override
 	public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
 		logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
-		httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, messageProperty.getMessage("not.authorized"));
+		httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Acesso negado.");
 	}
 }

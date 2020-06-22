@@ -1,6 +1,5 @@
 package br.com.ota.cpjbackend.configuration;
 
-import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.exception.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +29,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider tokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final MessageProperty messageProperty;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -50,7 +48,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler(messageProperty);
+        return new CustomAccessDeniedHandler();
     }
 
     @Bean

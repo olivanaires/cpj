@@ -1,6 +1,5 @@
 package br.com.ota.cpjbackend.validator;
 
-import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.model.annotation.Conditional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanWrapperImpl;
@@ -13,8 +12,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 @RequiredArgsConstructor
 public class ConditionalValidator implements ConstraintValidator<Conditional, Object> {
-
-    private final MessageProperty messageProperty;
 
     private String selected;
     private String[] required;
@@ -40,7 +37,7 @@ public class ConditionalValidator implements ConstraintValidator<Conditional, Ob
 
                 if (!valid) {
                     context.disableDefaultConstraintViolation();
-                    context.buildConstraintViolationWithTemplate(messageProperty.getMessage("field.required", propName))
+                    context.buildConstraintViolationWithTemplate(propName + " é obrigatório.")
                             .addPropertyNode(propName).addConstraintViolation();
                 }
             }

@@ -1,6 +1,5 @@
 package br.com.ota.cpjbackend.configuration;
 
-import br.com.ota.cpjbackend.configuration.util.MessageProperty;
 import br.com.ota.cpjbackend.exception.ResourceNotFoundException;
 import br.com.ota.cpjbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepository;
-	private final MessageProperty messageProperty;
 
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
 		return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-				.orElseThrow(() -> new UsernameNotFoundException(messageProperty.getMessage("user.not.found", usernameOrEmail)));
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário " + usernameOrEmail + " não encontrado."));
 	}
 
 	@Transactional
