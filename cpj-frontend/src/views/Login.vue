@@ -72,13 +72,11 @@
                             this.$router.push('/profile');
                         },
                         error => {
-                            console.log(error.response)
                             this.loading = false;
                             this.message = error.response.data.message;
                         }
                     );
                 }
-                // });
             }
         }
     };
