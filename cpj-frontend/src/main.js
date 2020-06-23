@@ -11,6 +11,7 @@ import pt from 'vee-validate/dist/locale/pt_BR.json';
 import * as rules from 'vee-validate/dist/rules';
 import {VueMaskDirective} from 'v-mask'
 import VueSweetalert2 from 'vue-sweetalert2';
+import VueCookies from 'vue-cookies'
 import 'sweetalert2/dist/sweetalert2.min.css';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
@@ -47,6 +48,7 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(VueCookies);
 
 const sweetAlertOptions = {
     position: 'top-end',

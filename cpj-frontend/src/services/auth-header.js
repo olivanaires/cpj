@@ -1,8 +1,9 @@
-export default function authHeader() {
-    let user = JSON.parse(localStorage.getItem('user'));
+import Vue from 'vue';
 
-    if (user && user.token) {
-        return { Authorization: user.token };
+export default function authHeader() {
+    let token = Vue.$cookies.get('token');
+    if (token) {
+        return { Authorization: token };
     } else {
         return {};
     }

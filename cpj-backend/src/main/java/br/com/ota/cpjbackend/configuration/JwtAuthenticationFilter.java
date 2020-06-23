@@ -12,7 +12,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,8 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-
-				response.addCookie(new Cookie("token", jwt));
 			}
 		} catch (Exception ex) {
 			logger.error("Could not set user authentication in security context", ex);

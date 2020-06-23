@@ -5,6 +5,7 @@ import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
 import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.User;
 import br.com.ota.cpjbackend.model.vo.LoginRequest;
+import br.com.ota.cpjbackend.model.vo.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Locale;
 
@@ -30,7 +33,7 @@ public class AuthController {
     private final MessagePropertie messageSource;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -38,9 +41,8 @@ public class AuthController {
 
             User user = (User) authentication.getPrincipal();
             String token = tokenProvider.generateToken(user);
-            user.setToken(token);
 
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(new LoginResponse(user, token));
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppException(messageSource.getMessage("invalid.user")));

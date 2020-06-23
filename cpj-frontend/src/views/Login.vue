@@ -68,7 +68,8 @@
                 this.loading = true;
                 if (this.user.username && this.user.password) {
                     this.$store.dispatch('auth/login', this.user).then(
-                        () => {
+                        response => {
+                            this.$cookies.set('token', response);
                             this.$router.push('/profile');
                         },
                         error => {
