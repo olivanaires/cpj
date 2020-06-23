@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,8 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		try {
 			String jwt = getJwtFromRequest(request);
 
-			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-
+			if (StringUtils.hasText(jwt) && !tokenProvider.validateToken(jwt) && isNotLoginRequest(request.getRequestURI())) {
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sessão expirada.");
+			}
+			else if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 				UserDetails user = tokenProvider.getUserFromJWT(jwt);
 				if (user == null) {
 					Long userId = tokenProvider.getUserIdFromJWT(jwt);
@@ -40,6 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+
+				response.addCookie(new Cookie("token", jwt));
 			}
 		} catch (Exception ex) {
 			logger.error("Could not set user authentication in security context", ex);
@@ -53,5 +58,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return bearerToken.substring(7);
 		}
 		return null;
+	}
+
+	private boolean isNotLoginRequest(String uri) {
+		return !StringUtils.endsWithIgnoreCase(uri, "/auth/signin");
 	}
 }
