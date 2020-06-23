@@ -48,9 +48,6 @@ public class User extends BaseEntity implements UserDetails {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@Transient
-	private String token;
-
 	public User(String username, String email, String password) {
 		this.username = username;
 		this.email = email;
