@@ -8,6 +8,7 @@ import br.com.ota.cpjbackend.model.vo.MessageResponse;
 import br.com.ota.cpjbackend.model.vo.UserRequest;
 import br.com.ota.cpjbackend.repository.RoleRepository;
 import br.com.ota.cpjbackend.repository.UserRepository;
+import br.com.ota.cpjbackend.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,7 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final MessagePropertie messagePropertie;
+    private final EmailService emailService;
 
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -52,6 +54,8 @@ public class UserController {
         user.setRoles(Collections.singleton(role));
 
         userRepository.save(user);
+
+        emailService.sendNewUserEmail(userRequest);
 
         return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.user")));
     }
