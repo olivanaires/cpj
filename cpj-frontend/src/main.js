@@ -53,7 +53,7 @@ Vue.use(VueCookies);
 const sweetAlertOptions = {
     position: 'top-end',
     showConfirmButton: false,
-    timer: 1500
+    timer: 3000
 
 }
 Vue.use(VueSweetalert2, sweetAlertOptions);
@@ -70,10 +70,10 @@ axios.interceptors.response.use(function (response) {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'OK!',
-            timer: 1500000
+            timer: 30000
         }).then(() => {
-            store.dispatch('auth/logout');
-            router.push('/login').then(r => r);
+            store.dispatch('auth/logout')
+                .then(() => router.push('/login'));
         });
     } else {
         return Promise.reject(error);

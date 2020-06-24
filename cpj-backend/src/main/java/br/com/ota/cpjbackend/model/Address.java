@@ -23,7 +23,6 @@ public class Address extends BaseEntity {
     @Size(max = 50)
     private String neighborhood;
 
-    @NotBlank
     @Size(max = 50)
     private String complement;
 

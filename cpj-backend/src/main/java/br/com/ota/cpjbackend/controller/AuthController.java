@@ -45,7 +45,7 @@ public class AuthController {
             return ResponseEntity.ok(new LoginResponse(user, token));
 
         } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppException(messageSource.getMessage("invalid.user")));
+            return ResponseEntity.badRequest().body(new AppException(messageSource.getMessage("invalid.user")));
         }
     }
 

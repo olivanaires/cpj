@@ -2,6 +2,7 @@ package br.com.ota.cpjbackend.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -19,6 +20,7 @@ public class Lawyer extends BaseEntity {
     @Size(max = 40)
     private String name;
 
+    @NaturalId
     @Size(max = 10)
     private String oabNumber;
 

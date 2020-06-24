@@ -4,8 +4,10 @@ import br.com.ota.cpjbackend.model.enums.DurationType;
 import br.com.ota.cpjbackend.model.enums.PaymentType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,6 +21,11 @@ import java.util.List;
 @NoArgsConstructor
 public class Contract extends BaseEntity {
 
+
+    @NotBlank
+    @Size(max = 50)
+    @NaturalId
+    private String number;
 
     @Size(max = 200)
     private String description;

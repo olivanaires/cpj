@@ -36,7 +36,6 @@ public class Client extends BaseEntity {
     private String cnpj;
 
     @Enumerated(EnumType.STRING)
-    @NaturalId
     @Column(length = 20)
     private ClientType clientType;
 
@@ -47,14 +46,13 @@ public class Client extends BaseEntity {
     private String contactPhoneTwo;
 
     @Enumerated(EnumType.STRING)
-    @NaturalId
     @Column(length = 60)
     private MaritalStatus maritalStatus;
 
     @Size(max = 50)
     private String citizenship;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
     private Address address;
 
 }

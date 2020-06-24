@@ -15,8 +15,7 @@
                     </b-form-row>
 
                     <b-form-row>
-                        <c-input-text label-value="Número RG" v-model="client.identityNumber" roles-value="required"
-                                      bs-col-value="col-md-4"/>
+                        <c-input-text label-value="Número RG" v-model="client.identityNumber" bs-col-value="col-md-4"/>
                         <c-input-select label-value="Situação Matrimonial" v-model="client.maritalStatus"
                                         roles-value="required" :option-values="maritalStatus" bs-col-value="col-md-4"/>
                         <c-input-text label-value="Cidadania" v-model="client.citizenship" roles-value="required"
@@ -72,11 +71,11 @@
         methods: {
             handleRegister() {
                 ClientService.create(this.client).then(
-                    data => {
-                        console.log(data)
+                    result => {
+                        this.$swal({icon: 'success', title: result.data.message});
                     },
                     error => {
-                        console.log(error.response.data)
+                        this.$swal({icon: 'error', title: error.response.data.message});
                     });
 
             }
