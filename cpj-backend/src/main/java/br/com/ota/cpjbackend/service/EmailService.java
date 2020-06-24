@@ -19,7 +19,7 @@ public class EmailService {
         String subject = "Usuário e Senha do NAP-CPJ";
 
         Email from = new Email("airesolivan@gmail.com");
-        Email to = new Email("olivanaires@gmail.com");
+        Email to = new Email(userRequest.getEmail());
 
         DynamicTemplatePersonalization personalization = new DynamicTemplatePersonalization();
         personalization.addDynamicTemplateData("username", userRequest.getUsername());
