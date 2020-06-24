@@ -9,20 +9,24 @@ import br.com.ota.cpjbackend.model.vo.UserRequest;
 import br.com.ota.cpjbackend.repository.RoleRepository;
 import br.com.ota.cpjbackend.repository.UserRepository;
 import br.com.ota.cpjbackend.service.EmailService;
+import br.com.ota.cpjbackend.service.UserService;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Objects;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
+
+    private final UserService userService;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -62,17 +66,32 @@ public class UserController {
 
     @PostMapping("/update")
     public ResponseEntity<?> update(@RequestBody UserRequest userRequest) {
-        User user = userRepository.findByUsernameOrEmail(userRequest.getUsername(), null).orElse(null);
-
-        if (Objects.isNull(user)) {
+        try {
+            userService.updatePassword(userRequest);
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.updated.success", "model.user.password")));
+        } catch (NotFoundException ex) {
             return ResponseEntity.badRequest()
                     .body(new AppException(messagePropertie.getMessage("message.not.found", "model.user", userRequest.getUsername())));
         }
+    }
 
-        user.setPassword(encoder.encode(userRequest.getPassword()));
-        userRepository.save(user);
+    @GetMapping("/passwordRefresh/{email}")
+    public ResponseEntity<?> passwordRefresh(@PathVariable String email) {
+        try {
+            UserRequest userRequest = new UserRequest();
+            userRequest.setEmail(email);
+            userRequest.setPassword(new RandomString(8).nextString());
+            User user = userService.updatePassword(userRequest);
 
-        return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.updated.success", "model.user.password")));
+            userRequest.setUsername(user.getUsername());
+            userRequest.setRole(user.getRoles().iterator().next().getName());
+            emailService.sendNewUserEmail(userRequest);
+
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.resent.email.password", userRequest.getEmail())));
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new AppException(messagePropertie.getMessage("message.not.found", "model.user.email", email)));
+        }
     }
 
 }

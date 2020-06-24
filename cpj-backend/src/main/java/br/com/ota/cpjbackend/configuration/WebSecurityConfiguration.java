@@ -63,10 +63,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-//                .antMatchers("/auth/signin").permitAll()
-//                .antMatchers("/api/user/create").hasAnyRole("ADMIN")
-//                .antMatchers("/api/**").authenticated()
+//                .antMatchers("/**").permitAll()
+                .antMatchers("/auth/signin").permitAll()
+                .antMatchers("/api/user/passwordRefresh/*").permitAll()
+                .antMatchers("/api/user/create").hasAnyRole("ADMIN")
+                .antMatchers("/api/**").authenticated()
         ;
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());

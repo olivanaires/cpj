@@ -18,6 +18,10 @@ class UserService {
             password
         }, {headers: authHeader()});
     }
+
+    resetPassword(email) {
+        return axios.get(API_URL + 'passwordRefresh/' + email);
+    }
 }
 
 export default new UserService();

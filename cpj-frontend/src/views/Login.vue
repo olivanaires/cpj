@@ -7,7 +7,7 @@
                     class="profile-img-card"
             />
             <form name="form" @submit.prevent="handleLogin">
-                <div class="form-group">
+                <div class="form-group" v-if="!isRefreshView">
                     <label for="username">Username *</label>
                     <input id="username"
                            v-model="user.username"
@@ -17,7 +17,17 @@
                            name="username"
                     />
                 </div>
-                <div class="form-group">
+                <div class="form-group" v-if="isRefreshView">
+                    <label for="email">E-Mail *</label>
+                    <input id="email"
+                           v-model="user.email"
+                           type="text"
+                           required
+                           class="form-control"
+                           name="username"
+                    />
+                </div>
+                <div class="form-group" v-if="!isRefreshView">
                     <label for="password">Password *</label>
                     <input id="password"
                            v-model="user.password"
@@ -28,9 +38,15 @@
                     />
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-block" :disabled="loading">
+                    <button v-if="!isRefreshView" class="btn btn-primary btn-block" :disabled="loading">
                         <span v-show="loading" class="spinner-border spinner-border-sm"></span>
                         <span>Login</span>
+                    </button>
+                    <div class="forgot-password">
+                        <span v-if="!isRefreshView" @click="changeView">Esqueci a usurname ou senha!</span>
+                    </div>
+                    <button v-if="isRefreshView" type="button" class="btn btn-primary btn-block" @click="resetPassword">
+                        <span>Resetar Senha</span>
                     </button>
                 </div>
                 <div class="form-group">
@@ -43,6 +59,7 @@
 
 <script>
     import User from '../models/user';
+    import UserService from '../services/user.service'
 
     export default {
         name: 'Login',
@@ -50,7 +67,8 @@
             return {
                 user: new User('', ''),
                 loading: false,
-                message: ''
+                message: '',
+                isRefreshView: false
             };
         },
         computed: {
@@ -78,6 +96,24 @@
                         }
                     );
                 }
+            },
+            changeView() {
+                this.isRefreshView = true;
+            },
+            resetPassword() {
+                if (this.user.email) {
+                    UserService.resetPassword(this.user.email).then(
+                        response => {
+                            this.$swal({icon: 'success', title: response.data.message});
+                        },
+                        error => {
+                            this.$swal({icon: 'error', title: error.response.data.message});
+                        }
+                    );
+                } else {
+                    this.$swal({icon: 'error', title: "E-Mail deve ser informado."});
+                }
+                this.isRefreshView = false;
             }
         }
     };
@@ -115,5 +151,18 @@
         -moz-border-radius: 50%;
         -webkit-border-radius: 50%;
         border-radius: 50%;
+    }
+
+    .forgot-password {
+        color: blue;
+        text-align: center;
+        font-size: 13px;
+        margin-top: 10px;
+        height: 20px;
+    }
+
+    .forgot-password:hover {
+        cursor: pointer;
+        font-size: 14px;
     }
 </style>
