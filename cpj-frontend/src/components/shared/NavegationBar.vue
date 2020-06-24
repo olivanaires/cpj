@@ -1,12 +1,14 @@
 <template>
     <div id="app" class="margin-bottom">
-        <b-navbar toggleable="lg">
-            <b-navbar-brand>NavBar</b-navbar-brand>
+        <b-navbar toggleable="lg" class="nav-bar-color">
+            <b-navbar-brand>
+                <img id="menu-img" src="../../assets/logo_v2.png" class="nav-bar-img"/>
+            </b-navbar-brand>
 
             <b-navbar-toggle target="nav-collapse"/>
 
             <b-collapse id="nav-collapse" is-nav>
-                <b-navbar-nav>
+                <b-navbar-nav class="nav-bar-text">
                     <b-nav-item v-if="currentUser" to="/home">
                         <b-icon icon="house"></b-icon>
                         Home
@@ -16,13 +18,14 @@
                             <b-icon icon="person-plus"></b-icon>
                             Cadastro
                         </template>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário
+                        </b-dropdown-item>
                         <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
-                <b-navbar-nav v-if="currentUser" class="ml-auto">
+                <b-navbar-nav v-if="currentUser" class="ml-auto nav-bar-text">
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
@@ -69,5 +72,22 @@
 <style scoped>
     .margin-bottom {
         margin-bottom: 25px;
+    }
+
+    .nav-bar-color {
+        background-color: #234235;
+    }
+
+    .nav-bar-img {
+        max-width: 85%;
+        height: auto;
+    }
+
+    .nav-bar-text * {
+        color: white !important;
+    }
+
+    ::v-deep .dropdown .nav-link {
+        color: white !important;
     }
 </style>
