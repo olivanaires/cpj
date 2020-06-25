@@ -9,6 +9,10 @@ class ClientService {
         return axios.post(API_URL + 'create', client, {headers: authHeader()});
     }
 
+    list() {
+        return axios.get(API_URL + 'list', {headers: authHeader()})
+    }
+
 }
 
 export default new ClientService();

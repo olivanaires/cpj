@@ -60,7 +60,7 @@
     import User from '../../models/user';
 
     export default {
-        name: 'Register',
+        name: 'userRegister',
         data() {
             return {
                 title: 'Cadastrar Usuário',

@@ -22,6 +22,15 @@
                         </b-dropdown-item>
                         <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
                     </b-nav-item-dropdown>
+                    <b-nav-item-dropdown v-if="currentUser" right>
+                        <template v-slot:button-content>
+                            <b-icon icon="card-list"></b-icon>
+                            Listagem
+                        </template>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userList">Usuário
+                        </b-dropdown-item>
+                        <b-dropdown-item to="/clientList">Cliente</b-dropdown-item>
+                    </b-nav-item-dropdown>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->

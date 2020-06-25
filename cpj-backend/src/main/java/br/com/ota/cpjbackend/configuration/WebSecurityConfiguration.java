@@ -1,6 +1,6 @@
 package br.com.ota.cpjbackend.configuration;
 
-import br.com.ota.cpjbackend.exception.CustomAccessDeniedHandler;
+import br.com.ota.cpjbackend.configuration.util.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

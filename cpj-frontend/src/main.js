@@ -61,7 +61,8 @@ Vue.use(VueSweetalert2, sweetAlertOptions);
 axios.interceptors.response.use(function (response) {
     return response;
 }, error => {
-    if (401 === error.response.status) {
+    if (401 === error.response.status ||
+        (error.response.status === 500 && error.response.data.message === 'Access is denied')) {
         Vue.swal({
             position: 'center',
             title: 'Sessão Expirou',

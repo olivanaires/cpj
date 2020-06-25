@@ -22,13 +22,23 @@ const routes = [
     },
     {
         path: '/userRegister',
-        name: 'user',
+        name: 'userRegister',
         component: () => import('../components/register/User.vue')
     },
     {
+        path: '/userList',
+        name: 'userList',
+        component: () => import('../components/list/User.vue')
+    },
+    {
         path: '/clientRegister',
-        name: 'client',
+        name: 'clientRegister',
         component: () => import('../components/register/Client.vue')
+    },
+    {
+        path: '/clientList',
+        name: 'clientList',
+        component: () => import('../components/list/Client.vue')
     },
     {
         path: '/profile',

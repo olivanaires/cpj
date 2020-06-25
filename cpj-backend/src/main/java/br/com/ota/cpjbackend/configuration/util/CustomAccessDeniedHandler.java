@@ -1,4 +1,4 @@
-package br.com.ota.cpjbackend.exception;
+package br.com.ota.cpjbackend.configuration.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
