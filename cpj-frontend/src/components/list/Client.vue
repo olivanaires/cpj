@@ -3,7 +3,7 @@
         <b-card :header="title" header-class="header-title" class="col-md-12">
             <b-card-body>
 
-                <b-card header="Filtros" header-class="header-title" class="col-md-12">
+                <b-card header="Filtros" class="col-md-12">
                     <b-input type="search" class="filtro" @input="filter = $event"
                              placeholder="Filtre por parte do nome"/>
                 </b-card>
@@ -88,5 +88,9 @@
     .card {
         padding: 0px !important;
         margin-bottom: 10px;
+    }
+    .header-title {
+        font-size: 25px !important;
+        text-align: center;
     }
 </style>
