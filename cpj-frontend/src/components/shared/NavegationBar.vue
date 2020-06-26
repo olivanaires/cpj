@@ -20,7 +20,7 @@
                             Cadastro
                         </template>
                         <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
-                        <b-dropdown-item v-if="currentUser" to="/lawyerRegister">Advogado</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/lawyerRegister">Advogado</b-dropdown-item>
                         <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
                     </b-nav-item-dropdown>
                     <!-- LISTAGEM -->
