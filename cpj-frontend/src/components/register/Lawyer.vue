@@ -22,6 +22,29 @@
                                           bs-col-value="col-md-12" roles-value="required|email"/>
                         </b-form-row>
 
+                        <b-form-row>
+                            <div class="col-md-6">
+                                <ValidationProvider name="Senha *" rules="required|min:6|confirmed:passwordConfirmation"
+                                                    v-slot="{ errors }">
+                                    <b-form-group label-for="input-senha" label="Senha">
+                                        <b-form-input id="input-senha" v-model="user.password" type="password"/>
+                                        <span class="c-erro-msg">{{ errors[0] }}</span>
+                                    </b-form-group>
+                                </ValidationProvider>
+                            </div>
+
+                            <div class="col-md-6">
+                                <ValidationProvider v-slot="{ errors }" vid="passwordConfirmation">
+                                    <b-form-group label-for="input-senha-c" label="Confirmação Senha *">
+                                        <b-form-input id="input-senha-passwordConfirmation"
+                                                      v-model="passwordConfirmation"
+                                                      type="password"/>
+                                        <span class="c-erro-msg">{{ errors[0] }}</span>
+                                    </b-form-group>
+                                </ValidationProvider>
+                            </div>
+                        </b-form-row>
+
                         <b-row align-h="center">
                             <b-button class="col-md-2" type="submit" :disabled="invalid" variant="success">Salvar
                             </b-button>
@@ -45,7 +68,8 @@
                 title: 'Cadastrar Advogado',
                 name: '',
                 oabNumber: '',
-                user: new User('ROLE_LAWYER', '', '', '')
+                user: new User('ROLE_LAWYER', '', '', ''),
+                passwordConfirmation: '',
             };
         },
         methods: {

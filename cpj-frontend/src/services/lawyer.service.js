@@ -5,7 +5,6 @@ const API_URL = '/api/lawyer/';
 
 class LawyerService {
     create(lawyer) {
-        console.log(lawyer)
         return axios.post(API_URL + 'create', lawyer, {headers: authHeader()});
     }
 
