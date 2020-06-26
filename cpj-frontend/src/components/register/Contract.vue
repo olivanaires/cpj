@@ -16,13 +16,13 @@
                         <b-row>
                             <c-input-text v-model="contract.duration" roles-value="required|numeric"
                                           label-value="Duração" bs-col-value="col-md-2"/>
-                            <b-form-group label="Tipo Duração *" class="col-md-2">
-                                <b-form-radio-group v-model="contract.durationType" :options="durationTypes"/>
+                            <b-form-group label="Tipo Duração *" class="col-md-3">
+                                <b-form-radio-group v-model="contract.durationType" :options="durationTypeOptions"/>
                             </b-form-group>
-                            <b-form-group :label="paymentValueLabel" class=" col-md-3">
+                            <b-form-group :label="paymentValueLabel" class=" col-md-2">
                                 <money v-model="contract.paymentValue" class="form-control"/>
                             </b-form-group>
-                            <b-form-group label="Entrada *" class=" col-md-3">
+                            <b-form-group label="Entrada *" class=" col-md-2">
                                 <money v-model="contract.entryValue" class="form-control"/>
                             </b-form-group>
 
@@ -32,15 +32,22 @@
                         </b-row>
 
                         <b-row>
+                            <b-form-group label="Tipo Pagamento *" class="col-md-12">
+                                <b-form-checkbox-group v-model="contract.paymentTypes" :options="paymentTypeOptions">
+                                </b-form-checkbox-group>
+                            </b-form-group>
+                        </b-row>
+
+                        <b-row>
                             <b-form-group label="Clientes" class="col-md-6">
-                                <b-input v-model="clientFilter"/>
+                                <!--                                <b-input v-model="clientFilter"/>-->
                                 <b-form-select v-model="selectedContractors" value-field="cpf" text-field="clientName"
-                                               :options="filteredClientList" multiple :select-size="4"/>
+                                               :options="filteredClientList" multiple :select-size="6"/>
                             </b-form-group>
                             <b-form-group label="Advogados" class="col-md-6">
-                                <b-input v-model="lawyerFilter"/>
+                                <!--                                <b-input v-model="lawyerFilter"/>-->
                                 <b-form-select v-model="selectedLawyers" value-field="oabNumber" text-field="name"
-                                               :options="filteredLawyerList" multiple :select-size="4"/>
+                                               :options="filteredLawyerList" multiple :select-size="6"/>
                             </b-form-group>
                         </b-row>
 
@@ -57,17 +64,20 @@
 
 <script>
     import Contract from '../../models/contract';
-    import durationType from '../../models/durationType';
+    import durationTypes from '../../models/durationType';
+    import paymentTypes from '../../models/paymentType';
     import ClientService from '../../services/client.service';
     import LawyerService from '../../services/lawyer.service';
+    import ContractService from '../../services/contract.service';
 
     export default {
         name: 'contractRegister',
         data() {
             return {
                 title: 'Cadastro de Contrato',
-                durationTypes: durationType,
-                contract: new Contract(new Date(), durationType[0].value),
+                durationTypeOptions: durationTypes,
+                paymentTypeOptions: paymentTypes,
+                contract: new Contract(new Date(), durationTypes[0].value),
                 clientFilter: '',
                 clientList: [],
                 selectedContractors: [],
@@ -96,7 +106,7 @@
         },
         computed: {
             paymentValueLabel() {
-                const label = durationType.filter(dt => dt.value === this.contract.durationType)[0];
+                const label = durationTypes.filter(dt => dt.value === this.contract.durationType)[0];
                 return 'Valor ' + label.text + ' *';
             },
             filteredClientList() {
@@ -120,9 +130,17 @@
             handleRegister(event) {
                 this.contract.contractors = this.selectedContractors;
                 this.contract.hired = this.selectedLawyers;
-                console.log(this.contract);
-                event.target.reset();
-                this.contract.signatureDate = new Date();
+                ContractService.create(this.contract).then(
+                    response => {
+                        event.target.reset();
+                        this.contract.signatureDate = new Date();
+                        this.$swal({icon: 'success', title: response.data.message});
+                    },
+                    error => {
+                        this.$swal({icon: 'error', title: error.response.data.message});
+                    }
+                );
+
             }
         }
     }

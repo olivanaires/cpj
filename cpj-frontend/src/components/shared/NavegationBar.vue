@@ -22,6 +22,7 @@
                         <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
                         <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/lawyerRegister">Advogado</b-dropdown-item>
                         <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
+                        <b-dropdown-item to="/contractRegister">Contrato</b-dropdown-item>
                     </b-nav-item-dropdown>
                     <!-- LISTAGEM -->
                     <b-nav-item-dropdown v-if="currentUser" right>
@@ -32,11 +33,8 @@
                         <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userList">Usuário</b-dropdown-item>
                         <b-dropdown-item v-if="currentUser" to="/lawyerList">Advogado</b-dropdown-item>
                         <b-dropdown-item to="/clientList">Cliente</b-dropdown-item>
+                        <b-dropdown-item to="/contractList">Contrato</b-dropdown-item>
                     </b-nav-item-dropdown>
-                    <b-nav-item v-if="currentUser" to="/contractRegister">
-                        <b-icon icon="file-text"></b-icon>
-                        Contrato
-                    </b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->

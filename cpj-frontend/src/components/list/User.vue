@@ -30,7 +30,7 @@
             return {
                 title: 'Listagem de Usuários',
                 filter: '',
-                users: Array,
+                users: [],
                 fields: [
                     {
                         key: 'index',
@@ -60,7 +60,6 @@
             UserService.list().then(
                 response => {
                     this.users = response.data;
-                    console.log(this.users)
                 });
         },
         computed: {

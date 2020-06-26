@@ -36,6 +36,11 @@ const routes = [
         component: () => import('../components/register/Client.vue')
     },
     {
+        path: '/contractRegister',
+        name: 'contractRegister',
+        component: () => import('../components/register/Contract.vue')
+    },
+    {
         path: '/userList',
         name: 'userList',
         component: () => import('../components/list/User.vue')
@@ -51,9 +56,9 @@ const routes = [
         component: () => import('../components/list/Client.vue')
     },
     {
-        path: '/contractRegister',
-        name: 'contractRegister',
-        component: () => import('../components/register/Contract.vue')
+        path: '/contractList',
+        name: 'contractList',
+        component: () => import('../components/list/Contract.vue')
     },
     {
         path: '/profile',

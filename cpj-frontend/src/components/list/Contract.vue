@@ -2,22 +2,17 @@
     <b-row align-h="center">
         <b-card :header="title" header-class="header-title" class="col-md-12">
             <b-card-body>
-
                 <b-card header="Filtros" class="col-md-12">
                     <b-input type="search" class="filtro" @input="filter = $event"
-                             placeholder="Filtre por parte do nome"/>
+                             placeholder="Filtre por parte do número"/>
                 </b-card>
 
-                <b-table striped hover bordered
-                         :items="filteredCustomers" :fields="fields">
+                <b-table striped hover bordered :items="filteredLawyers" :fields="fields">
                     <template v-slot:cell(index)="data">
                         {{ data.index + 1 }}
                     </template>
-                    <template v-slot:cell(document)="data">
-                        {{ data.item.cpf ? data.item.cpf : data.item.cnpj }}
-                    </template>
-                    <template v-slot:cell(contactPhone)="data">
-                        {{ data.item.contactPhoneOne ? data.item.contactPhoneOne : data.item.contactPhoneTwo }}
+                    <template v-slot:cell(duration)="data">
+                        {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
                     </template>
                 </b-table>
             </b-card-body>
@@ -26,59 +21,66 @@
 </template>
 
 <script>
-    import ClientService from '../../services/client.service';
+    import moment from 'moment';
+    import ContractService from '../../services/contract.service';
+    import durationTypes from '../../models/durationType';
 
     export default {
-        name: 'clientList',
+        name: 'contractList',
         data() {
             return {
-                title: 'Listagem de Clientes',
+                title: 'Listagem de Contratos',
                 filter: '',
-                customers: [],
+                listResult: [],
                 fields: [
                     {
                         key: 'index',
                         thClass: 'bg-dark text-white'
                     },
                     {
-                        key: 'clientName',
-                        label: 'Nome',
+                        key: 'number',
+                        label: 'Número',
                         sortable: true,
                         thClass: 'bg-dark text-white'
                     },
                     {
-                        key: 'clientType',
-                        label: 'Tipo',
+                        key: 'signatureDate',
+                        label: 'Data Assinatura',
                         sortable: true,
-                        thClass: 'bg-dark text-white'
+                        thClass: 'bg-dark text-white',
+                        formatter: "formatDateAssigned"
                     },
                     {
-                        key: 'document',
-                        label: 'Documento',
-                        thClass: 'bg-dark text-white'
-                    },
-                    {
-                        key: 'contactPhone',
-                        label: 'Contato',
+                        key: 'duration',
+                        label: 'Duração',
+                        sortable: true,
                         thClass: 'bg-dark text-white'
                     }
                 ]
             }
         },
         created() {
-            ClientService.list().then(
+            ContractService.list().then(
                 response => {
-                    this.customers = response.data;
+                    this.listResult = response.data;
                 });
         },
         computed: {
-            filteredCustomers() {
+            filteredLawyers() {
                 if (this.filter) {
                     let exp = new RegExp(this.filter.trim(), 'i');
-                    return this.customers.filter(c => exp.test(c.clientName));
+                    return this.listResult.filter(c => exp.test(c.number));
                 } else {
-                    return this.customers;
+                    return this.listResult;
                 }
+            }
+        },
+        methods: {
+            formatDateAssigned(value) {
+                return moment(String(value)).format('DD/MM/YYYY ');
+            },
+            toStringDuratioType(value) {
+                return durationTypes.filter(dt => dt.value === value)[0].text;
             }
         }
     }
@@ -89,6 +91,7 @@
         padding: 0px !important;
         margin-bottom: 10px;
     }
+
     .header-title {
         font-size: 25px !important;
         text-align: center;

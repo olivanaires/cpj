@@ -4,7 +4,7 @@
             <b-card-body>
                 <b-card header="Filtros" class="col-md-12">
                     <b-input type="search" class="filtro" @input="filter = $event"
-                             placeholder="Filtre por parte do usuário"/>
+                             placeholder="Filtre por parte do nome"/>
                 </b-card>
 
                 <b-table striped hover bordered :items="filteredLawyers" :fields="fields">
@@ -26,7 +26,7 @@
             return {
                 title: 'Listagem de Advogado',
                 filter: '',
-                lawyers: Array,
+                lawyers: [],
                 fields: [
                     {
                         key: 'index',
