@@ -13,24 +13,30 @@
                         <b-icon icon="house"></b-icon>
                         Home
                     </b-nav-item>
+                    <!-- CADASTRO -->
                     <b-nav-item-dropdown v-if="currentUser" right>
                         <template v-slot:button-content>
                             <b-icon icon="person-plus"></b-icon>
                             Cadastro
                         </template>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário
-                        </b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser" to="/lawyerRegister">Advogado</b-dropdown-item>
                         <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
                     </b-nav-item-dropdown>
+                    <!-- LISTAGEM -->
                     <b-nav-item-dropdown v-if="currentUser" right>
                         <template v-slot:button-content>
                             <b-icon icon="card-list"></b-icon>
                             Listagem
                         </template>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userList">Usuário
-                        </b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userList">Usuário</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser" to="/lawyerList">Advogado</b-dropdown-item>
                         <b-dropdown-item to="/clientList">Cliente</b-dropdown-item>
                     </b-nav-item-dropdown>
+                    <b-nav-item v-if="currentUser" to="/contractRegister">
+                        <b-icon icon="file-text"></b-icon>
+                        Contrato
+                    </b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->

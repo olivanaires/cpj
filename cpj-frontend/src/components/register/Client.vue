@@ -47,6 +47,7 @@
     import Address from "../../models/address";
 
     export default {
+        name: 'clientRegister',
         data() {
             return {
                 title: 'Cadastrar Cliente',
@@ -69,9 +70,10 @@
             this.client.address = new Address();
         },
         methods: {
-            handleRegister() {
+            handleRegister(event) {
                 ClientService.create(this.client).then(
                     result => {
+                        event.target.reset();
                         this.$swal({icon: 'success', title: result.data.message});
                     },
                     error => {
@@ -87,5 +89,8 @@
     .header-title {
         font-size: 25px !important;
         text-align: center;
+    }
+    .card {
+        padding: 0px !important;
     }
 </style>

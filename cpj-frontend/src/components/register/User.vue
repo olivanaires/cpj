@@ -78,11 +78,10 @@
             }
         },
         methods: {
-            handleRegister() {
+            handleRegister(event) {
                 UserService.create(this.user).then(
                     result => {
-                        this.user = new User('ROLE_USER', '', '', '');
-                        this.passwordConfirmation = '';
+                        event.target.reset();
                         this.$swal({icon: 'success', title: result.data.message});
                     },
                     error => {

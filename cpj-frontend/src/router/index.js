@@ -26,9 +26,9 @@ const routes = [
         component: () => import('../components/register/User.vue')
     },
     {
-        path: '/userList',
-        name: 'userList',
-        component: () => import('../components/list/User.vue')
+        path: '/lawyerRegister',
+        name: 'lawyerRegister',
+        component: () => import('../components/register/Lawyer.vue')
     },
     {
         path: '/clientRegister',
@@ -36,9 +36,24 @@ const routes = [
         component: () => import('../components/register/Client.vue')
     },
     {
+        path: '/userList',
+        name: 'userList',
+        component: () => import('../components/list/User.vue')
+    },
+    {
+        path: '/lawyerList',
+        name: 'lawyerList',
+        component: () => import('../components/list/Lawyer.vue')
+    },
+    {
         path: '/clientList',
         name: 'clientList',
         component: () => import('../components/list/Client.vue')
+    },
+    {
+        path: '/contractRegister',
+        name: 'contractRegister',
+        component: () => import('../components/register/Contract.vue')
     },
     {
         path: '/profile',

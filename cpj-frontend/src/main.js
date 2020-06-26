@@ -9,7 +9,8 @@ import store from './store'
 import {ValidationObserver, ValidationProvider, extend, localize} from 'vee-validate';
 import pt from 'vee-validate/dist/locale/pt_BR.json';
 import * as rules from 'vee-validate/dist/rules';
-import {VueMaskDirective} from 'v-mask'
+import {VueMaskDirective} from 'v-mask';
+import money from 'v-money'
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueCookies from 'vue-cookies'
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -24,6 +25,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import CustomInputText from "./components/shared/CustomInputText";
 import CustomInputMask from "./components/shared/CustomInputMask";
+import CustomInputDate from "./components/shared/CustomInputDate";
 import CustomInputSelect from "./components/shared/CustomInputSelect";
 import ComponentAddress from "./components/shared/ComponentAddress";
 import axios from "axios";
@@ -39,6 +41,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('c-input-text', CustomInputText);
 Vue.component('c-input-mask', CustomInputMask);
+Vue.component('c-input-date', CustomInputDate);
 Vue.component('c-input-select', CustomInputSelect);
 Vue.component('c-address', ComponentAddress);
 
@@ -49,6 +52,13 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(VueCookies);
+Vue.use(money, {
+    precision: 2,
+    decimal: ',',
+    thousands: '.',
+    prefix: 'R$ ',
+    masked: false
+})
 
 const sweetAlertOptions = {
     position: 'top-end',
