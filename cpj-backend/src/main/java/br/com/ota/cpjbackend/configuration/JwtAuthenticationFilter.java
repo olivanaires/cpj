@@ -19,45 +19,46 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-	private final JwtTokenProvider tokenProvider;
-	private final CustomUserDetailsService customUserDetailsService;
+    private final JwtTokenProvider tokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		try {
-			String jwt = getJwtFromRequest(request);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        try {
+            String jwt = getJwtFromRequest(request);
 
-			if (StringUtils.hasText(jwt) && !tokenProvider.validateToken(jwt) && isNotLoginRequest(request.getRequestURI())) {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sessão expirada.");
-			}
-			else if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-				UserDetails user = tokenProvider.getUserFromJWT(jwt);
-				if (user == null) {
-					Long userId = tokenProvider.getUserIdFromJWT(jwt);
-					user = customUserDetailsService.loadUserById(userId);
-				}
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//			if (StringUtils.hasText(jwt) && !tokenProvider.validateToken(jwt) && isNotLoginRequest(request.getRequestURI())) {
+//				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sessão expirada.");
+//			}
+//			else
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+                UserDetails user = tokenProvider.getUserFromJWT(jwt);
+                if (user == null) {
+                    Long userId = tokenProvider.getUserIdFromJWT(jwt);
+                    user = customUserDetailsService.loadUserById(userId);
+                }
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
-		} catch (Exception ex) {
-			logger.error("Could not set user authentication in security context", ex);
-		}
-		filterChain.doFilter(request, response);
-	}
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            logger.error("Could not set user authentication in security context", ex);
+        }
+        filterChain.doFilter(request, response);
+    }
 
-	private String getJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7);
-		}
-		return null;
-	}
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 
-	private boolean isNotLoginRequest(String uri) {
-		return !StringUtils.endsWithIgnoreCase(uri, "/auth/signin");
-	}
+    private boolean isNotLoginRequest(String uri) {
+        return !StringUtils.endsWithIgnoreCase(uri, "/auth/signin");
+    }
 }
