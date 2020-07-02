@@ -46,6 +46,12 @@ Vue.component('c-input-select', CustomInputSelect);
 Vue.component('c-address', ComponentAddress);
 
 Vue.directive('mask', VueMaskDirective);
+Vue.directive('capitalize', {
+    update (el, binding) {
+        if (binding.value !== undefined && binding.value !== false)
+            el.value = el.value.replace(/\b[a-zA-Z]/g, (match) => match.toUpperCase())
+    },
+})
 
 Vue.config.productionTip = false
 

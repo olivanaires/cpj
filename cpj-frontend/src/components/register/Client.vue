@@ -11,7 +11,7 @@
                         <c-input-mask v-if="client.clientType === 'PJ'" label-value="CNPJ" v-model="client.cpfCnpj"
                                       mask-value="###.###.##/####-##" bs-col-value="col-md-3" :required="true"/>
                         <c-input-text label-value="Nome Cliente" v-model="client.clientName" roles-value="required"
-                                      bs-col-value="col-md-7"/>
+                                      bs-col-value="col-md-7" :capitalize="true"/>
                     </b-form-row>
 
                     <b-form-row>
@@ -19,11 +19,12 @@
                         <c-input-select label-value="Situação Matrimonial" v-model="client.maritalStatus"
                                         roles-value="required" :option-values="maritalStatus" bs-col-value="col-md-4"/>
                         <c-input-text label-value="Cidadania" v-model="client.citizenship" roles-value="required"
-                                      bs-col-value="col-md-4"/>
+                                      bs-col-value="col-md-4" :capitalize="true"/>
                     </b-form-row>
 
                     <b-form-row>
-                        <c-input-text label-value="Nome Contato" v-model="client.contactName" bs-col-value="col-md-8"/>
+                        <c-input-text label-value="Nome Contato" v-model="client.contactName" :capitalize="true"
+                                      bs-col-value="col-md-8"/>
                         <c-input-mask label-value="Celular" v-model="client.contactPhoneOne"
                                       mask-value="(##) #####-####" bs-col-value="col-md-2"/>
                         <c-input-mask label-value="Telefone Fixo" v-model="client.contactPhoneTwo"

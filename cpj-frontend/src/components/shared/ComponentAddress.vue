@@ -13,16 +13,16 @@
         </b-form-row>
         <b-form-row>
             <c-input-text label-value="Logradoureo" v-model="value.street" roles-value="required"
-                          bs-col-value="col-md-10" :required="true"/>
+                          bs-col-value="col-md-10" :required="true" :capitalize="true"/>
             <c-input-text label-value="Número" v-model="value.number" roles-value="required"
                           bs-col-value="col-md-2" :required="true"/>
         </b-form-row>
         <b-form-row>
             <c-input-text label-value="Bairro" v-model="value.neighborhood" roles-value="required"
-                          bs-col-value="col-md-4" :required="true"/>
+                          bs-col-value="col-md-4" :required="true" :capitalize="true"/>
             <c-input-text label-value="Cidade" v-model="value.city" roles-value="required"
-                          bs-col-value="col-md-4" :required="true"/>
-            <c-input-text label-value="Complemento" v-model="value.complement"
+                          bs-col-value="col-md-4" :required="true" :capitalize="true"/>
+            <c-input-text label-value="Complemento" v-model="value.complement" :capitalize="true"
                           bs-col-value="col-md-4"/>
         </b-form-row>
     </div>

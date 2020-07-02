@@ -8,7 +8,7 @@
                             <c-input-text v-model="contract.number" roles-value="required" label-value="Número"
                                           bs-col-value="col-md-3"/>
                             <c-input-text v-model="contract.description" roles-value="required" label-value="Descrição"
-                                          bs-col-value="col-md-6"/>
+                                          bs-col-value="col-md-6" :capitalize="true"/>
                             <c-input-date v-model="contract.signatureDate" roles-value="required"
                                           label-value="Data Assinatura" bs-col-value="col-md-3"/>
                         </b-row>

@@ -6,7 +6,7 @@
                     <b-form name="form" @submit.prevent="handleRegister">
 
                         <b-form-row>
-                            <c-input-text label-value="Nome" v-model="lawyer.name"
+                            <c-input-text label-value="Nome" v-model="lawyer.name" :capitalize="true"
                                           bs-col-value="col-md-12" roles-value="required"/>
                         </b-form-row>
 
