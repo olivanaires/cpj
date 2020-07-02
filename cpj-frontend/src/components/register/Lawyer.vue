@@ -87,7 +87,7 @@
                         event.target.reset();
                         this.$swal({icon: 'success', title: result.data.message});
                         if (this.id) {
-                            this.$router.push({name: 'contractList'})
+                            this.$router.push({name: 'lawyerList'})
                         }
                     },
                     error => {
