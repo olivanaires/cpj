@@ -27,7 +27,7 @@ public class Address extends BaseEntity {
     private String complement;
 
     @NotNull
-    private int number;
+    private String number;
 
     @NotBlank
     @Size(max = 9)

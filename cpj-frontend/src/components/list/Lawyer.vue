@@ -11,6 +11,11 @@
                     <template v-slot:cell(index)="data">
                         {{ data.index + 1 }}
                     </template>
+                    <template v-slot:cell(options)="data">
+                        <b-link :to="`/lawyerUpdate/${data.item.id}`">
+                            <b-icon icon="pencil"></b-icon>
+                        </b-link>
+                    </template>
                 </b-table>
             </b-card-body>
         </b-card>
@@ -53,6 +58,11 @@
                     {
                         key: 'user.email',
                         label: 'E-Mail',
+                        thClass: 'bg-dark text-white'
+                    },
+                    {
+                        key: 'options',
+                        label: 'Opções',
                         thClass: 'bg-dark text-white'
                     }
                 ]

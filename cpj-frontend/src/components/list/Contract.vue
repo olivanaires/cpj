@@ -14,6 +14,11 @@
                     <template v-slot:cell(duration)="data">
                         {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
                     </template>
+                    <template v-slot:cell(options)="data">
+                        <b-link :to="`/contractUpdate/${data.item.id}`">
+                            <b-icon icon="pencil"></b-icon>
+                        </b-link>
+                    </template>
                 </b-table>
             </b-card-body>
         </b-card>
@@ -55,6 +60,11 @@
                         label: 'Duração',
                         sortable: true,
                         thClass: 'bg-dark text-white'
+                    },
+                    {
+                        key: 'options',
+                        label: 'Opções',
+                        thClass: 'bg-dark text-white'
                     }
                 ]
             }
@@ -77,7 +87,7 @@
         },
         methods: {
             formatDateAssigned(value) {
-                return moment(String(value)).format('DD/MM/YYYY ');
+                return moment(String(value), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY');
             },
             toStringDuratioType(value) {
                 return durationTypes.filter(dt => dt.value === value)[0].text;

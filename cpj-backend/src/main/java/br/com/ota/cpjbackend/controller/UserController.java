@@ -15,12 +15,12 @@ import net.bytebuddy.utility.RandomString;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -39,19 +39,34 @@ public class UserController {
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> register(@Valid @RequestBody UserRequest userRequest) {
-        if (userRepository.existsByUsername(userRequest.getUsername())) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse(messagePropertie.getMessage("user.exist", userRequest.getUsername())));
+
+        User user;
+        if (Objects.nonNull(userRequest.getId())) {
+            try {
+                user = userRepository.findById(userRequest.getId())
+                        .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.user")));
+                user.setUsername(userRequest.getUsername());
+                user.setEmail(userRequest.getEmail());
+                user.setPassword(encoder.encode(userRequest.getPassword()));
+            } catch (NotFoundException ex) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse(messagePropertie.getMessage("message.model.not.found", "model.user")));
+            }
+        } else {
+            if (userRepository.existsByUsername(userRequest.getUsername())) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse(messagePropertie.getMessage("user.exist", userRequest.getUsername())));
+            }
+
+            if (userRepository.existsByEmail(userRequest.getEmail())) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse(messagePropertie.getMessage("user.exist", userRequest.getEmail())));
+            }
+            user  = new User(userRequest.getUsername(), userRequest.getEmail(), encoder.encode(userRequest.getPassword()));
+            Role role = roleRepository.findByName(userRequest.getRole());
+            user.setRoles(Collections.singleton(role));
         }
 
-        if (userRepository.existsByEmail(userRequest.getEmail())) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse(messagePropertie.getMessage("user.exist", userRequest.getEmail())));
-        }
-
-        User user = new User(userRequest.getUsername(), userRequest.getEmail(), encoder.encode(userRequest.getPassword()));
-        Role role = roleRepository.findByName(userRequest.getRole());
-        user.setRoles(Collections.singleton(role));
         userRepository.save(user);
 
         emailService.sendNewUserEmail(userRequest);
@@ -93,6 +108,18 @@ public class UserController {
     public ResponseEntity<?> list() {
         List<User> users = userRepository.findAll(Sort.by("username"));
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/load/{id}")
+    public ResponseEntity<?> load(@PathVariable String id) {
+        try {
+            User user = userRepository.findById(Long.parseLong(id))
+                    .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.user")));
+            return ResponseEntity.ok(user.toUserRequest());
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(ex.getMessage()));
+        }
     }
 
 }

@@ -14,6 +14,11 @@
                     <template v-slot:cell(roles)="data">
                         {{ toStringRole(data.item.roles) }}
                     </template>
+                    <template v-slot:cell(options)="data">
+                        <b-link :to="`/userUpdate/${data.item.id}`">
+                            <b-icon icon="pencil"></b-icon>
+                        </b-link>
+                    </template>
                 </b-table>
             </b-card-body>
         </b-card>
@@ -51,6 +56,11 @@
                         key: 'roles',
                         label: 'Função',
                         sortable: true,
+                        thClass: 'bg-dark text-white'
+                    },
+                    {
+                        key: 'options',
+                        label: 'Opções',
                         thClass: 'bg-dark text-white'
                     }
                 ]

@@ -1,5 +1,6 @@
 package br.com.ota.cpjbackend.model;
 
+import br.com.ota.cpjbackend.model.vo.UserRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,12 +30,10 @@ public class User extends BaseEntity implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	@NaturalId
 	@NotBlank
 	@Size(max = 15)
 	private String username;
 
-	@NaturalId
 	@NotBlank
 	@Size(max = 40)
 	@Email
@@ -45,7 +44,7 @@ public class User extends BaseEntity implements UserDetails {
 	@Size(max = 100)
 	private String password;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
@@ -94,6 +93,16 @@ public class User extends BaseEntity implements UserDetails {
 		} catch (JsonProcessingException e) {
 			return Long.toString(this.getId());
 		}
+	}
+
+	public UserRequest toUserRequest() {
+		UserRequest userRequest = new UserRequest();
+		userRequest.setId(this.getId());
+		userRequest.setRole(this.getRoles().iterator().next().getName());
+		userRequest.setUsername(this.getUsername());
+		userRequest.setEmail(this.getEmail());
+		userRequest.setPassword(null);
+		return userRequest;
 	}
 
 }

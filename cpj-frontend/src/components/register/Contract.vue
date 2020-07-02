@@ -40,13 +40,11 @@
 
                         <b-row>
                             <b-form-group label="Clientes" class="col-md-6">
-                                <!--                                <b-input v-model="clientFilter"/>-->
-                                <b-form-select v-model="selectedContractors" value-field="cpf" text-field="clientName"
+                                <b-form-select v-model="contract.contractors" value-field="cpfCnpj" text-field="clientName"
                                                :options="filteredClientList" multiple :select-size="6"/>
                             </b-form-group>
                             <b-form-group label="Advogados" class="col-md-6">
-                                <!--                                <b-input v-model="lawyerFilter"/>-->
-                                <b-form-select v-model="selectedLawyers" value-field="oabNumber" text-field="name"
+                                <b-form-select v-model="contract.hired" value-field="oabNumber" text-field="name"
                                                :options="filteredLawyerList" multiple :select-size="6"/>
                             </b-form-group>
                         </b-row>
@@ -75,13 +73,12 @@
         data() {
             return {
                 title: 'Cadastro de Contrato',
+                id: this.$route.params.id,
                 durationTypeOptions: durationTypes,
                 paymentTypeOptions: paymentTypes,
                 contract: new Contract(new Date(), durationTypes[0].value),
-                clientFilter: '',
                 clientList: [],
                 selectedContractors: [],
-                lawyerFilter: '',
                 lawyerList: [],
                 selectedLawyers: [],
                 mask: {
@@ -103,6 +100,18 @@
                 result => this.lawyerList = result.data,
                 error => this.$swal({icon: 'error', title: error.response.data.message})
             );
+
+            if (this.id) {
+                ContractService.load(this.id)
+                    .then(response => {
+                        this.contract = response.data;
+                        this.contract.signatureDate = new Date(response.data.signatureDate);
+                        this.contract.duration = String(response.data.duration);
+                        this.contract.hired = response.data.hired.map(h => h.oabNumber);
+                        this.contract.contractors = response.data.contractors.map(h => h.cpfCnpj);
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+            }
         },
         computed: {
             paymentValueLabel() {
@@ -128,13 +137,14 @@
         },
         methods: {
             handleRegister(event) {
-                this.contract.contractors = this.selectedContractors;
-                this.contract.hired = this.selectedLawyers;
                 ContractService.create(this.contract).then(
                     response => {
                         event.target.reset();
                         this.contract.signatureDate = new Date();
                         this.$swal({icon: 'success', title: response.data.message});
+                        if (this.id) {
+                            this.$router.push({name: 'contractList'})
+                        }
                     },
                     error => {
                         this.$swal({icon: 'error', title: error.response.data.message});

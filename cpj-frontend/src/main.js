@@ -91,6 +91,19 @@ axios.interceptors.response.use(function (response) {
     }
 });
 
+router.beforeEach((to, from, next) => {
+    const publicPages = ['/login'];
+    const authRequired = !publicPages.includes(to.path);
+    const loggedIn = Vue.$cookies.get('token');
+    const user = store.state.auth.user;
+
+    if (authRequired && (!loggedIn || !user) ) {
+        next('/login');
+    } else {
+        next();
+    }
+});
+
 new Vue({
     router,
     store,

@@ -16,6 +16,8 @@ import javax.validation.constraints.Size;
 @Setter
 public class UserRequest {
 
+    private Long id;
+
     @NotBlank
     @Size(min = 3, max = 15)
     private String username;

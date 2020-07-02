@@ -1,9 +1,13 @@
 package br.com.ota.cpjbackend.configuration;
 
 import br.com.ota.cpjbackend.configuration.util.CustomAccessDeniedHandler;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -47,6 +51,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.featuresToDisable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        builder.indentOutput(true);
+        builder.simpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+        return builder;
+    }
+
+    @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }
@@ -65,7 +80,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 //                .antMatchers("/**").permitAll()
                 .antMatchers("/auth/signin").permitAll()
-                .antMatchers("/api/user/passwordRefresh/*").permitAll()
+//                .antMatchers("/api/user/passwordRefresh/*").permitAll()
                 .antMatchers("/api/user/create").hasAnyRole("ADMIN")
                 .antMatchers("/api/**").authenticated()
         ;

@@ -6,9 +6,9 @@
                     <b-form-row>
                         <c-input-select label-value="Tipo" v-model="client.clientType" roles-value="required"
                                         :option-values="clientTypeOptions" bs-col-value="col-md-2"/>
-                        <c-input-mask v-if="client.clientType === 'PF'" label-value="CPF" v-model="client.cpf"
+                        <c-input-mask v-if="client.clientType === 'PF'" label-value="CPF" v-model="client.cpfCnpj"
                                       mask-value="###.###.###-##" bs-col-value="col-md-3" :required="true"/>
-                        <c-input-mask v-if="client.clientType === 'PJ'" label-value="CNPJ" v-model="client.cnpj"
+                        <c-input-mask v-if="client.clientType === 'PJ'" label-value="CNPJ" v-model="client.cpfCnpj"
                                       mask-value="###.###.##/####-##" bs-col-value="col-md-3" :required="true"/>
                         <c-input-text label-value="Nome Cliente" v-model="client.clientName" roles-value="required"
                                       bs-col-value="col-md-7"/>
@@ -51,10 +51,11 @@
         data() {
             return {
                 title: 'Cadastrar Cliente',
+                id: this.$route.params.id,
                 client: new Client(),
                 clientTypeOptions: [
                     {item: 'PF', name: 'Pessoa Física'},
-                    {item: 'PJ', name: 'Pessoa jurídica'}
+                    {item: 'PJ', name: 'Pessoa Jurídica'}
                 ],
                 maritalStatus: [
                     {item: 'SINGLE', name: 'Solteiro (a)'},
@@ -65,9 +66,17 @@
             };
         },
         created() {
-            this.client.clientType = 'PF';
-            this.client.maritalStatus = 'SINGLE';
-            this.client.address = new Address();
+            if (this.id) {
+                ClientService.load(this.id)
+                    .then(response => {
+                        this.client = response.data;
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
+            } else {
+                this.client.clientType = 'PF';
+                this.client.maritalStatus = 'SINGLE';
+                this.client.address = new Address();
+            }
         },
         methods: {
             handleRegister(event) {
@@ -75,6 +84,9 @@
                     result => {
                         event.target.reset();
                         this.$swal({icon: 'success', title: result.data.message});
+                        if (this.id) {
+                            this.$router.push({name: 'contractList'})
+                        }
                     },
                     error => {
                         this.$swal({icon: 'error', title: error.response.data.message});
@@ -90,6 +102,7 @@
         font-size: 25px !important;
         text-align: center;
     }
+
     .card {
         padding: 0px !important;
     }

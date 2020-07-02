@@ -2,10 +2,10 @@
     <div>
         <b-form-row>
             <div class="col-md-3">
-                <ValidationProvider name="CEP" rules="required" v-slot="{ errors }">
+                <ValidationProvider name="CEP" rules="required|min:9" v-slot="{ errors }">
                     <b-form-group label-for="cep_address" label="CEP *">
                         <b-form-input id="cep_address" v-model="value.postalCode" type="text" v-mask="'#####-###'"
-                                      required v-on:change="findAddress"/>
+                                      required @focusout="findAddress"/>
                         <span class="c-erro-msg">{{ errors[0] }}</span>
                     </b-form-group>
                 </ValidationProvider>
@@ -35,27 +35,30 @@
         name: 'c-address',
         props: {
             value: {
-                type: Object,
-                required: true
+                street: '',
+                neighborhood: '',
+                city: ''
             }
         },
         methods: {
             findAddress() {
-                AddressService.getAddressByCep(this.value.postalCode.replace("-", "")).then(
-                    result => {
-                        if (!result.data['erro']) {
-                            this.value.street = result.data['logradouro'];
-                            this.value.neighborhood = result.data['bairro'];
-                            this.value.city = result.data['localidade'] + " - " + result.data['uf'];
-                        } else {
-                            this.value.street = '';
-                            this.value.neighborhood = '';
-                            this.value.city = '';
-                        }
-                    },
-                    error => {
-                        console.log(error.response.data)
-                    });
+                if (this.value.postalCode.length === 9) {
+                    AddressService.getAddressByCep(this.value.postalCode.replace("-", "")).then(
+                        result => {
+                            if (!result.data['erro']) {
+                                this.value.street = result.data['logradouro'];
+                                this.value.neighborhood = result.data['bairro'];
+                                this.value.city = result.data['localidade'] + " - " + result.data['uf'];
+                            } else {
+                                this.value.street = '';
+                                this.value.neighborhood = '';
+                                this.value.city = '';
+                            }
+                        },
+                        error => {
+                            this.$swal({icon: 'error', title: error.response.data.message})
+                        });
+                }
             }
         },
         watch: {

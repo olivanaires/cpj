@@ -61,6 +61,26 @@ const routes = [
         component: () => import('../components/list/Contract.vue')
     },
     {
+        path: '/userUpdate/:id',
+        name: 'userUpdate',
+        component: () => import('../components/register/User.vue')
+    },
+    {
+        path: '/lawyerUpdate/:id',
+        name: 'lawyerUpdate',
+        component: () => import('../components/register/Lawyer.vue')
+    },
+    {
+        path: '/clientUpdate/:id',
+        name: 'clientUpdate',
+        component: () => import('../components/register/Client.vue')
+    },
+    {
+        path: '/contractUpdate/:id',
+        name: 'contractUpdate',
+        component: () => import('../components/register/Contract.vue')
+    },
+    {
         path: '/profile',
         name: 'profile',
         component: () => import('../views/Profile.vue')
@@ -77,15 +97,3 @@ const router = new VueRouter({
 });
 
 export default router
-
-router.beforeEach((to, from, next) => {
-    const publicPages = ['/login'];
-    const authRequired = !publicPages.includes(to.path);
-    const loggedIn = localStorage.getItem('user');
-
-    if (authRequired && !loggedIn) {
-        next('/login');
-    } else {
-        next();
-    }
-});

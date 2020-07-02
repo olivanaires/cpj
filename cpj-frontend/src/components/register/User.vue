@@ -12,7 +12,8 @@
                             <c-input-text label-value="Username" v-model="user.username"
                                           bs-col-value="col-md-6" roles-value="required"/>
                             <c-input-select label-value="Papel" v-model="user.role" :option-values="roleOptions"
-                                            bs-col-value="col-md-6" roles-value="required"/>
+                                            bs-col-value="col-md-6" roles-value="required"
+                                            :disabled="Boolean(user.id)"/>
                         </b-form-row>
 
                         <b-form-row>
@@ -44,8 +45,9 @@
                         </b-form-row>
 
                         <b-row align-h="center">
-                            <b-button class="col-md-2" type="submit" :disabled="invalid" variant="success">Salvar
-                            </b-button>
+                            <b-button class="col-md-3" type="submit" :disabled="invalid" variant="success">Salvar</b-button>
+                            <div class="space"/>
+                            <b-button class="col-md-3" type="button" @click="refresh" variant="success">Cancelar</b-button>
                         </b-row>
 
                     </b-form>
@@ -64,6 +66,7 @@
         data() {
             return {
                 title: 'Cadastrar Usuário',
+                id: this.$route.params.id,
                 user: new User('ROLE_USER', '', '', ''),
                 passwordConfirmation: '',
                 roleOptions: [
@@ -72,21 +75,37 @@
                 ]
             };
         },
-        computed: {
-            loggedIn() {
-                return this.$store.state.auth.status.loggedIn;
+        created() {
+            if (this.id) {
+                UserService.load(this.id).then(
+                    response => {
+                        this.user = response.data;
+                    },
+                    error => {
+                        this.$swal({icon: 'error', title: error.response.data.message});
+                    }
+                );
             }
         },
         methods: {
             handleRegister(event) {
                 UserService.create(this.user).then(
-                    result => {
+                    response => {
                         event.target.reset();
-                        this.$swal({icon: 'success', title: result.data.message});
+                        this.$swal({icon: 'success', title: response.data.message});
+                        if (this.id) {
+                            this.$router.push({name: 'contractList'})
+                        }
                     },
                     error => {
                         this.$swal({icon: 'error', title: error.response.data.message});
                     });
+            },
+            refresh() {
+                this.$el.getElementsByTagName("form").namedItem('form').reset()
+                if (this.id) {
+                    this.$router.push({name: 'userList'});
+                }
             }
         }
     };
@@ -119,5 +138,9 @@
     .header-title {
         font-size: 25px !important;
         text-align: center;
+    }
+
+    .space {
+        margin: 10px;
     }
 </style>

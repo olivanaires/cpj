@@ -6,19 +6,19 @@
                     <b-form name="form" @submit.prevent="handleRegister">
 
                         <b-form-row>
-                            <c-input-text label-value="Nome" v-model="name"
+                            <c-input-text label-value="Nome" v-model="lawyer.name"
                                           bs-col-value="col-md-12" roles-value="required"/>
                         </b-form-row>
 
                         <b-form-row>
-                            <c-input-text label-value="Nº OAB" v-model="oabNumber"
+                            <c-input-text label-value="Nº OAB" v-model="lawyer.oabNumber"
                                           bs-col-value="col-md-6" roles-value="required"/>
-                            <c-input-text label-value="Username" v-model="user.username"
+                            <c-input-text label-value="Username" v-model="lawyer.user.username"
                                           bs-col-value="col-md-6" roles-value="required"/>
                         </b-form-row>
 
                         <b-form-row>
-                            <c-input-text label-value="E-Mail" v-model="user.email"
+                            <c-input-text label-value="E-Mail" v-model="lawyer.user.email"
                                           bs-col-value="col-md-12" roles-value="required|email"/>
                         </b-form-row>
 
@@ -27,7 +27,7 @@
                                 <ValidationProvider name="Senha *" rules="required|min:6|confirmed:passwordConfirmation"
                                                     v-slot="{ errors }">
                                     <b-form-group label-for="input-senha" label="Senha">
-                                        <b-form-input id="input-senha" v-model="user.password" type="password"/>
+                                        <b-form-input id="input-senha" v-model="lawyer.user.password" type="password"/>
                                         <span class="c-erro-msg">{{ errors[0] }}</span>
                                     </b-form-group>
                                 </ValidationProvider>
@@ -59,25 +59,36 @@
 
 <script>
     import LawyerService from '../../services/lawyer.service';
-    import User from '../../models/user';
+    import Lawyer from "../../models/lawyer";
 
     export default {
         name: 'lawyerRegister',
         data() {
             return {
                 title: 'Cadastrar Advogado',
-                name: '',
-                oabNumber: '',
-                user: new User('ROLE_LAWYER', '', '', ''),
+                id: this.$route.params.id,
+                lawyer: new Lawyer(),
                 passwordConfirmation: '',
             };
         },
+        created() {
+            if (this.id) {
+                LawyerService.load(this.id)
+                    .then(response => {
+                        this.lawyer = response.data;
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+            }
+        },
         methods: {
             handleRegister(event) {
-                LawyerService.create({oabNumber: this.oabNumber, name: this.name, user: this.user}).then(
+                LawyerService.create(this.lawyer).then(
                     result => {
                         event.target.reset();
                         this.$swal({icon: 'success', title: result.data.message});
+                        if (this.id) {
+                            this.$router.push({name: 'contractList'})
+                        }
                     },
                     error => {
                         this.$swal({icon: 'error', title: error.response.data.message});

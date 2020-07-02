@@ -1,16 +1,17 @@
+import Address from "./address";
+
 export default class Client {
-    constructor(clientName, contactName, identityNumber, cpf, cnpj, clientType, contactPhoneOne, contactPhoneTwo, maritalStatus, citizenship, address) {
+    constructor(clientName, contactName, identityNumber, cpfCnpj, clientType, contactPhoneOne, contactPhoneTwo, maritalStatus, citizenship) {
         this.clientName = clientName;
         this.contactName = contactName;
         this.identityNumber = identityNumber;
-        this.cpf = cpf;
-        this.cnpj = cnpj;
+        this.cpfCnpj = cpfCnpj;
         this.clientType = clientType;
         this.contactPhoneOne = contactPhoneOne;
         this.contactPhoneTwo = contactPhoneTwo;
         this.maritalStatus = maritalStatus;
         this.citizenship = citizenship;
-        this.address = address;
+        this.address = new Address();
     }
 
     toString() {

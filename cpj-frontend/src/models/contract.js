@@ -1,8 +1,10 @@
-export  default class Contract {
+export default class Contract {
 
     constructor(sigDate, durationType) {
         this.signatureDate = sigDate;
         this.durationType = durationType;
+        this.hired = [];
+        this.contractors = [];
     }
 
     defaults() {

@@ -15,8 +15,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "customers")
 @NoArgsConstructor
-@Conditional(selected = "clientType", values = "PF", required = {"cpf"})
-@Conditional(selected = "clientType", values = "PJ", required = {"cnpj"})
 public class Client extends BaseEntity {
 
     @NotBlank
@@ -29,11 +27,8 @@ public class Client extends BaseEntity {
     @Size(max = 20)
     private String identityNumber;
 
-    @Size(max = 14)
-    private String cpf;
-
-    @Size(max = 18)
-    private String cnpj;
+    @Size(min = 14, max = 18)
+    private String cpfCnpj;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)

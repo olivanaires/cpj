@@ -12,6 +12,10 @@ class LawyerService {
         return axios.get(API_URL + 'list', {headers: authHeader()})
     }
 
+    load(id) {
+        return axios.get(API_URL + `load/${id}`, {headers: authHeader()});
+    }
+
 }
 
 export default new LawyerService();

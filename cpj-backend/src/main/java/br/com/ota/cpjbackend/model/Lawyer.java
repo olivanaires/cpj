@@ -1,8 +1,8 @@
 package br.com.ota.cpjbackend.model;
 
+import br.com.ota.cpjbackend.model.vo.LawyerRequest;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,11 +21,19 @@ public class Lawyer extends BaseEntity {
     @Size(max = 40)
     private String name;
 
-    @NaturalId
     @Size(max = 10)
     private String oabNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    public LawyerRequest toLawyerRequest() {
+        LawyerRequest lawyerRequest = new LawyerRequest();
+        lawyerRequest.setId(this.getId());
+        lawyerRequest.setName(this.getName());
+        lawyerRequest.setOabNumber(this.getOabNumber());
+        lawyerRequest.setUser(this.getUser().toUserRequest());
+        return lawyerRequest;
+    }
 
 }

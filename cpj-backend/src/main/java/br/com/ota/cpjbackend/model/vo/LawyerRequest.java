@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class LawyerRequest {
 
+    private Long id;
+
     @NotBlank
     private String name;
 

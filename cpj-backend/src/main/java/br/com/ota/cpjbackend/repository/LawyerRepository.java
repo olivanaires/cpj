@@ -8,8 +8,11 @@ import java.util.List;
 @Repository
 public interface LawyerRepository extends BaseRepository<Lawyer, Long> {
 
+    boolean existsByOabNumberAndIdNot(String oabNumber, Long id);
+
     boolean existsByOabNumber(String oabNumber);
 
     List<Lawyer> findAllByOabNumberIn(List<String> oabNumberList);
+
 
 }

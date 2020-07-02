@@ -13,11 +13,13 @@
                     <template v-slot:cell(index)="data">
                         {{ data.index + 1 }}
                     </template>
-                    <template v-slot:cell(document)="data">
-                        {{ data.item.cpf ? data.item.cpf : data.item.cnpj }}
-                    </template>
                     <template v-slot:cell(contactPhone)="data">
                         {{ data.item.contactPhoneOne ? data.item.contactPhoneOne : data.item.contactPhoneTwo }}
+                    </template>
+                    <template v-slot:cell(options)="data">
+                        <b-link :to="`/clientUpdate/${data.item.id}`">
+                            <b-icon icon="pencil"></b-icon>
+                        </b-link>
                     </template>
                 </b-table>
             </b-card-body>
@@ -53,13 +55,18 @@
                         thClass: 'bg-dark text-white'
                     },
                     {
-                        key: 'document',
-                        label: 'Documento',
+                        key: 'cpfCnpj',
+                        label: 'CPF/CNPJ',
                         thClass: 'bg-dark text-white'
                     },
                     {
                         key: 'contactPhone',
                         label: 'Contato',
+                        thClass: 'bg-dark text-white'
+                    },
+                    {
+                        key: 'options',
+                        label: 'Opções',
                         thClass: 'bg-dark text-white'
                     }
                 ]

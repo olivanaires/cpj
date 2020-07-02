@@ -9,12 +9,14 @@ import br.com.ota.cpjbackend.model.vo.MessageResponse;
 import br.com.ota.cpjbackend.repository.ClientRepository;
 import br.com.ota.cpjbackend.repository.ContractRepository;
 import br.com.ota.cpjbackend.repository.LawyerRepository;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/contract")
@@ -30,21 +32,18 @@ public class ContractController {
     public ResponseEntity<?> create(@Valid @RequestBody ContractRequest contractRequest) {
 
         try {
-            List<Client> customers = clientRepository.findAllByCpfInOrCnpjIn(contractRequest.getContractors());
+            List<Client> customers = clientRepository.findAllByCpfCnpjIn(contractRequest.getContractors());
             List<Lawyer> lawyers = lawyerRepository.findAllByOabNumberIn(contractRequest.getHired());
 
-            Contract contract = new Contract();
-            contract.setNumber(contractRequest.getNumber());
-            contract.setDescription(contractRequest.getDescription());
-            contract.setSignatureDate(contractRequest.getSignatureDate());
-            contract.setDurationType(contractRequest.getDurationType());
-            contract.setDuration(contractRequest.getDuration());
+            Contract contract;
+            if (Objects.isNull(contractRequest.getId())) {
+                contract = contractRequest.toContract(new Contract());
+            } else {
+                contract = contractRepository.getOne(contractRequest.getId());
+                contractRequest.toContract(contract);
+            }
             contract.setHired(lawyers);
             contract.setContractors(customers);
-            contract.setPaymentTypes(contractRequest.getPaymentTypes());
-            contract.setPaymentValue(contractRequest.getPaymentValue());
-            contract.setEntryValue(contractRequest.getEntryValue());
-            contract.setEndPercentValue(contractRequest.getEndPercentValue());
             contractRepository.save(contract);
 
             return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.contract")));
@@ -56,6 +55,19 @@ public class ContractController {
 
     @GetMapping("/list")
     public ResponseEntity<?> list() {
-        return ResponseEntity.ok(contractRepository.findAll());
+        List<Contract> all = contractRepository.findAll();
+        return ResponseEntity.ok(all);
+    }
+
+    @GetMapping("/load/{id}")
+    public ResponseEntity<?> load(@PathVariable String id) {
+        try {
+            Contract contract = contractRepository.findById(Long.parseLong(id))
+                    .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
+            return ResponseEntity.ok(contract);
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(ex.getMessage()));
+        }
     }
 }
