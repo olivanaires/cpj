@@ -47,11 +47,11 @@ Vue.component('c-address', ComponentAddress);
 
 Vue.directive('mask', VueMaskDirective);
 Vue.directive('capitalize', {
-    update (el, binding) {
+    update(el, binding) {
         if (binding.value !== undefined && binding.value !== false)
-            el.value = el.value.replace(/\b[a-zA-Z]/g, (match) => match.toUpperCase())
-    },
-})
+            el.value = el.value.replace(/(^|\s)[a-zà-ú]/g, (match) => match.toUpperCase())
+    }
+});
 
 Vue.config.productionTip = false
 
@@ -103,8 +103,9 @@ router.beforeEach((to, from, next) => {
     const loggedIn = Vue.$cookies.get('token');
     const user = store.state.auth.user;
 
-    if (authRequired && (!loggedIn || !user) ) {
-        next('/login');
+    if (authRequired && (!loggedIn || !user)) {
+        store.dispatch('auth/logout')
+            .then(() => router.push('/login'));
     } else {
         next();
     }

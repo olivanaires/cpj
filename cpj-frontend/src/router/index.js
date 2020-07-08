@@ -41,6 +41,11 @@ const routes = [
         component: () => import('../components/register/Contract.vue')
     },
     {
+        path: '/expenseRegister',
+        name: 'expenseRegister',
+        component: () => import('../components/register/Expense.vue')
+    },
+    {
         path: '/userList',
         name: 'userList',
         component: () => import('../components/list/User.vue')
@@ -59,6 +64,11 @@ const routes = [
         path: '/contractList',
         name: 'contractList',
         component: () => import('../components/list/Contract.vue')
+    },
+    {
+        path: '/expenseList',
+        name: 'expenseList',
+        component: () => import('../components/list/Expense.vue')
     },
     {
         path: '/userUpdate/:id',

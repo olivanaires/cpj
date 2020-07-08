@@ -12,7 +12,6 @@ import br.com.ota.cpjbackend.repository.RoleRepository;
 import br.com.ota.cpjbackend.service.EmailService;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

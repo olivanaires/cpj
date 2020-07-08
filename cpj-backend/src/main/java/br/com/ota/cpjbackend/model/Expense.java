@@ -2,8 +2,12 @@ package br.com.ota.cpjbackend.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,5 +29,11 @@ public class Expense extends BaseEntity {
 
     @NotNull
     private BigDecimal paymentValue;
+
+    private boolean refundable;
+
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Contract contract;
 
 }
