@@ -14,7 +14,7 @@ import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 @AllArgsConstructor
-public class GlobalControllerExceptionHandler {
+public class GlobalExceptionHandlerController {
 
     private final MessagePropertie messagePropertie;
 

@@ -39,7 +39,8 @@ public class ContractController {
             if (Objects.isNull(contractRequest.getId())) {
                 contract = contractRequest.toContract(new Contract());
             } else {
-                contract = contractRepository.getOne(contractRequest.getId());
+                contract = contractRepository.findById(contractRequest.getId())
+                        .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
                 contractRequest.toContract(contract);
             }
             contract.setHired(lawyers);

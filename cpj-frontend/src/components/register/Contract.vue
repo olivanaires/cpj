@@ -105,8 +105,8 @@
                 ContractService.load(this.id)
                     .then(response => {
                         this.contract = response.data;
-                        this.contract.signatureDate = new Date(response.data.signatureDate);
-                        this.contract.duration = String(response.data.duration);
+                        // this.contract.signatureDate = new Date(response.data.signatureDate);
+                        // this.contract.duration = String(response.data.duration);
                         this.contract.hired = response.data.hired.map(h => h.oabNumber);
                         this.contract.contractors = response.data.contractors.map(h => h.cpfCnpj);
                     })
@@ -119,20 +119,20 @@
                 return 'Valor ' + label.text + ' *';
             },
             filteredClientList() {
-                if (this.clientFilter) {
-                    const exp = new RegExp(this.clientFilter, 'i');
-                    return this.clientList.filter(c => exp.test(c.clientName));
-                } else {
+                // if (this.clientFilter) {
+                //     const exp = new RegExp(this.clientFilter, 'i');
+                //     return this.clientList.filter(c => exp.test(c.clientName));
+                // } else {
                     return this.clientList;
-                }
+                // }
             },
             filteredLawyerList() {
-                if (this.lawyerFilter) {
-                    const exp = new RegExp(this.lawyerFilter, 'i');
-                    return this.lawyerList.filter(l => exp.test(l.name));
-                } else {
+                // if (this.lawyerFilter) {
+                //     const exp = new RegExp(this.lawyerFilter, 'i');
+                //     return this.lawyerList.filter(l => exp.test(l.name));
+                // } else {
                     return this.lawyerList;
-                }
+                // }
             }
         },
         methods: {

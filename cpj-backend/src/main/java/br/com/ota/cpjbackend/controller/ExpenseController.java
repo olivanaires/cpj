@@ -1,11 +1,10 @@
 package br.com.ota.cpjbackend.controller;
 
 import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
-import br.com.ota.cpjbackend.model.Contract;
 import br.com.ota.cpjbackend.model.Expense;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
-import br.com.ota.cpjbackend.repository.ContractRepository;
 import br.com.ota.cpjbackend.repository.ExpenseRepository;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ import java.util.List;
 public class ExpenseController {
 
     private final ExpenseRepository expenseRepository;
-    private final ContractRepository contractRepository;
     private final MessagePropertie messagePropertie;
 
     @PostMapping("/create")
@@ -36,14 +34,25 @@ public class ExpenseController {
 
     @GetMapping("/load/{id}")
     public ResponseEntity<?> load(@PathVariable Long id) {
-        Expense expense = expenseRepository.getOne(id);
-        return ResponseEntity.ok(expense);
+        try {
+            Expense expense = expenseRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.expense")));
+            return ResponseEntity.ok(expense);
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @GetMapping("/listByContract/{contractId}")
     public ResponseEntity<?> listByContract(@PathVariable Long contractId) {
         List<Expense> allByCoAndContractId = expenseRepository.findAllByContractId(contractId);
         return ResponseEntity.ok(allByCoAndContractId);
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<MessageResponse> remove(@PathVariable Long id) {
+        expenseRepository.deleteById(id);
+        return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.removed.success", "model.expense")));
     }
 
 }

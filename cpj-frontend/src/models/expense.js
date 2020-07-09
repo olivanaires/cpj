@@ -2,9 +2,9 @@ import Contract from "./contract";
 
 export default class Expense {
 
-    constructor() {
+    constructor(date) {
         this.description = '';
-        this.date = new Date();
+        this.date = date;
         this.paymentValue = '';
         this.contract = new Contract();
         this.refundable = true;

@@ -18,6 +18,11 @@
                     <template v-slot:cell(contract)="data">
                         {{ data.item.contract.number + ' - ' + data.item.contract.description }}
                     </template>
+                    <template v-slot:cell(options)="data">
+                        <b-link :to="`/expenseUpdate/${data.item.id}`">
+                            <b-icon icon="pencil"></b-icon>
+                        </b-link>
+                    </template>
                 </b-table>
             </b-card-body>
         </b-card>
@@ -67,6 +72,11 @@
                         key: 'contract',
                         label: 'Contrato',
                         sortable: true,
+                        thClass: 'bg-dark text-white'
+                    },
+                    {
+                        key: 'options',
+                        label: 'Opções',
                         thClass: 'bg-dark text-white'
                     }
                 ]

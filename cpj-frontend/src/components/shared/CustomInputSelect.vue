@@ -14,7 +14,7 @@
     export default {
         name: 'c-input-select',
         props: {
-            value: {type: String, required: true, default: ''},
+            value: {required: true, default: ''},
             labelValue: {type: String, required: true},
             bsColValue: {type: String, default: "col-md-12"},
             optionValues: {type: Array, required: true},

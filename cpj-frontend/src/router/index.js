@@ -91,6 +91,11 @@ const routes = [
         component: () => import('../components/register/Contract.vue')
     },
     {
+        path: '/expenseUpdate/:id',
+        name: 'expenseUpdate',
+        component: () => import('../components/register/Expense.vue')
+    },
+    {
         path: '/profile',
         name: 'profile',
         component: () => import('../views/Profile.vue')

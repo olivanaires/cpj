@@ -52,7 +52,8 @@
         data() {
             return {
                 title: 'Cadastro de Despesas',
-                expense: new Expense(),
+                id: this.$route.params.id,
+                expense: new Expense(new Date()),
                 contractOptions: []
             }
         },
@@ -64,6 +65,16 @@
                     });
                 })
                 .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+
+            if (this.id) {
+                ExpenseService.load(this.id)
+                    .then(response => {
+                        this.expense = response.data;
+                        // this.expense.date = new Date(response.data.date);
+                        // this.expense.contract.id = String(response.data.contract.id);
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+            }
         },
         methods: {
             handleRegister(event) {
@@ -72,7 +83,7 @@
                         event.target.reset();
                         this.$swal({icon: 'success', title: response.data.message});
                         if (this.id) {
-                            this.$router.push({name: 'lawyerList'})
+                            this.$router.push({name: 'expenseList'})
                         }
                     },
                     error => {

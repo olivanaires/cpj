@@ -28,7 +28,7 @@
     export default {
         name: 'c-input-date',
         props: {
-            value: {type: Date},
+            value: {required: true, default: new Date()},
             labelValue: {type: String, required: true},
             bsColValue: {type: String, default: "col-md-12"},
             disabled: {type: Boolean, default: false},
