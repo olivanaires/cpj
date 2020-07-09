@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -38,12 +39,14 @@ public class Contract extends BaseEntity {
     private Integer duration;
 
     @NotEmpty
-    @OneToMany
-    private List<Lawyer> hired;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "contracts_hired", joinColumns = @JoinColumn(name = "contract_id"), inverseJoinColumns = @JoinColumn(name = "hired_id"))
+    private Set<Lawyer> hired;
 
     @NotEmpty
-    @OneToMany
-    private List<Client> contractors;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "contracts_contractors", joinColumns = @JoinColumn(name = "contract_id"), inverseJoinColumns = @JoinColumn(name = "contractors_id"))
+    private Set<Client> contractors;
 
     @NotNull
     @ElementCollection(targetClass = PaymentType.class)
@@ -56,8 +59,5 @@ public class Contract extends BaseEntity {
     private BigDecimal entryValue;
 
     private BigDecimal endPercentValue;
-
-    @OneToMany
-    private List<Expense> expenses;
 
 }

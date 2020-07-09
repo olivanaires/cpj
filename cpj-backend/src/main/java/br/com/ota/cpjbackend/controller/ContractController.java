@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,8 +44,8 @@ public class ContractController {
                         .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
                 contractRequest.toContract(contract);
             }
-            contract.setHired(lawyers);
-            contract.setContractors(customers);
+            contract.setHired(new HashSet<>(lawyers));
+            contract.setContractors(new HashSet<>(customers));
             contractRepository.save(contract);
 
             return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.contract")));
