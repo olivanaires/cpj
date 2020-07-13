@@ -8,7 +8,7 @@
             />
             <form name="form" @submit.prevent="handleLogin">
                 <div class="form-group" v-if="!isRefreshView">
-                    <label for="username">Username *</label>
+                    <label for="username">Usuário *</label>
                     <input id="username"
                            v-model="user.username"
                            type="text"
@@ -18,6 +18,7 @@
                     />
                 </div>
                 <div class="form-group" v-if="isRefreshView">
+                    <p>Informe seu e-mail de cadastro para que uma nova senha seja enviada!</p>
                     <label for="email">E-Mail *</label>
                     <input id="email"
                            v-model="user.email"
@@ -43,10 +44,14 @@
                         <span>Login</span>
                     </button>
                     <div class="forgot-password">
-                        <span v-if="!isRefreshView" @click="changeView">Esqueci a usurname ou senha!</span>
+                        <span v-if="!isRefreshView" @click="changeView">Esqueceu o Usuário ou Senha?</span>
                     </div>
                     <button v-if="isRefreshView" type="button" class="btn btn-primary btn-block" @click="resetPassword">
                         <span>Resetar Senha</span>
+                    </button>
+
+                    <button v-if="isRefreshView" type="button" class="btn btn-primary btn-block" @click.prevent="isRefreshView = false">
+                        <span>Voltar</span>
                     </button>
                 </div>
                 <div class="form-group">
