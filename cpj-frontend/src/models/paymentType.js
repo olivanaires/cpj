@@ -1,8 +1,9 @@
 const paymentTypes =[
-    {value: 'UNIQUE', text: "Pagamento Único"},
-    {value: 'MONTHLY', text: "Mensal"},
-    {value: 'YEARLY', text: "Anual"},
-    {value: 'END_PERCENT', text: "Percentual no Final"}
+    {item: 'MONTHLY', name: "Mensal"},
+    {item: 'YEARLY', name: "Anual"},
+    {item: 'HONORARY', name: "Honorários"},
+    {item: 'MONTHLY_HONORARY', name: "Mensal + Honorários"},
+    {item: 'YEARLY_HONORARY', name: "Anual + Honorários"}
 ];
 
 export default paymentTypes;

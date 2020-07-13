@@ -7,45 +7,48 @@
                         <b-row>
                             <c-input-text v-model="contract.number" roles-value="required" label-value="Número"
                                           bs-col-value="col-md-3"/>
-                            <c-input-text v-model="contract.description" roles-value="required" label-value="Descrição"
-                                          bs-col-value="col-md-6" :capitalize="true"/>
-                            <c-input-date v-model="contract.signatureDate" roles-value="required"
-                                          label-value="Data Assinatura" bs-col-value="col-md-3"/>
+                            <c-input-select v-model="contract.description" roles-value="required"
+                                            label-value="Descrição" :option-values="contractType"
+                                            bs-col-value="col-md-3"/>
+                            <c-input-date v-model="contract.signatureDate" roles-value="required" @input="updateEndDate"
+                                          label-value="Data Assinatura" bs-col-value="col-md-2"/>
+                            <c-input-text v-model="contract.duration" roles-value="required|numeric" input-type="number"
+                                          label-value="Duração Meses" bs-col-value="col-md-2"
+                                          @input="updateEndDate"/>
+                            <c-input-date v-model="contract.endDate" roles-value="required" label-value="Data Final"
+                                          bs-col-value="col-md-2" :disabled="true"/>
                         </b-row>
 
                         <b-row>
-                            <c-input-text v-model="contract.duration" roles-value="required|numeric"
-                                          label-value="Duração" bs-col-value="col-md-2"/>
-                            <b-form-group label="Tipo Duração *" class="col-md-3">
-                                <b-form-radio-group v-model="contract.durationType" :options="durationTypeOptions"/>
-                            </b-form-group>
-                            <b-form-group :label="paymentValueLabel" class=" col-md-2">
+                            <c-input-select v-model="contract.paymentType" :option-values="paymentTypeOptions"
+                                            label-value="Tipo Pagamento" roles-value="required"
+                                            bs-col-value="col-md-3"/>
+                            <b-form-group :label="paymentValueLabel" class=" col-md-3">
                                 <money v-model="contract.paymentValue" class="form-control"/>
                             </b-form-group>
-                            <b-form-group label="Entrada *" class=" col-md-2">
+                            <b-form-group label="Entrada" class=" col-md-3">
                                 <money v-model="contract.entryValue" class="form-control"/>
                             </b-form-group>
-
-                            <b-form-group label="Percentual" class="col-md-2">
-                                <money v-model="contract.endPercentValue" v-bind="mask" class="form-control"/>
-                            </b-form-group>
-                        </b-row>
-
-                        <b-row>
-                            <b-form-group label="Tipo Pagamento *" class="col-md-12">
-                                <b-form-checkbox-group v-model="contract.paymentTypes" :options="paymentTypeOptions">
-                                </b-form-checkbox-group>
-                            </b-form-group>
+                            <c-input-date v-model="contract.paymentDate" roles-value="required" @input="updateEndDate"
+                                          label-value="Data Pagamento" bs-col-value="col-md-3"/>
                         </b-row>
 
                         <b-row>
                             <b-form-group label="Clientes" class="col-md-6">
-                                <b-form-select v-model="contract.contractors" value-field="cpfCnpj" text-field="clientName"
+                                <b-form-select v-model="contract.contractors" value-field="cpfCnpj"
+                                               text-field="clientName"
                                                :options="filteredClientList" multiple :select-size="6"/>
                             </b-form-group>
                             <b-form-group label="Advogados" class="col-md-6">
                                 <b-form-select v-model="contract.hired" value-field="oabNumber" text-field="name"
                                                :options="filteredLawyerList" multiple :select-size="6"/>
+                            </b-form-group>
+                        </b-row>
+
+                        <b-row>
+                            <b-form-group label="Observações" class="col-md-12">
+                                <b-textarea v-model="contract.observations" rows="3"></b-textarea>
+
                             </b-form-group>
                         </b-row>
 
@@ -76,11 +79,15 @@
                 id: this.$route.params.id,
                 durationTypeOptions: durationTypes,
                 paymentTypeOptions: paymentTypes,
-                contract: new Contract(new Date(), durationTypes[0].value),
+                contract: new Contract(new Date(), durationTypes[0].value, paymentTypes[0].item),
                 clientList: [],
                 selectedContractors: [],
                 lawyerList: [],
                 selectedLawyers: [],
+                contractType: [
+                    {item: 'HONORARY', name: 'Honorário'},
+                    {item: 'LEGAL_ADVICE', name: 'Assessoria '}
+                ],
                 mask: {
                     decimal: ',',
                     thousands: '.',
@@ -115,15 +122,20 @@
         },
         computed: {
             paymentValueLabel() {
-                const label = durationTypes.filter(dt => dt.value === this.contract.durationType)[0];
-                return 'Valor ' + label.text + ' *';
+                if (this.contract.paymentType && this.contract.paymentType.includes('MONTHLY')) {
+                    return 'Valor Mês *';
+                } else if (this.contract.paymentType && this.contract.paymentType.includes('YEARLY')) {
+                    return 'Valor Ano *';
+                } else {
+                    return 'Valor';
+                }
             },
             filteredClientList() {
                 // if (this.clientFilter) {
                 //     const exp = new RegExp(this.clientFilter, 'i');
                 //     return this.clientList.filter(c => exp.test(c.clientName));
                 // } else {
-                    return this.clientList;
+                return this.clientList;
                 // }
             },
             filteredLawyerList() {
@@ -131,7 +143,7 @@
                 //     const exp = new RegExp(this.lawyerFilter, 'i');
                 //     return this.lawyerList.filter(l => exp.test(l.name));
                 // } else {
-                    return this.lawyerList;
+                return this.lawyerList;
                 // }
             }
         },
@@ -150,7 +162,19 @@
                         this.$swal({icon: 'error', title: error.response.data.message});
                     }
                 );
+            },
+            updateEndDate() {
+                if (this.contract.duration > 0) {
+                    let date = new Date(this.contract.signatureDate);
 
+                    if (this.contract.durationType === 'YEAR') {
+                        date.setFullYear(date.getFullYear() + Number(this.contract.duration));
+                    } else {
+                        date.setMonth(date.getMonth() + Number(this.contract.duration));
+                    }
+
+                    this.contract.endDate = date;
+                }
             }
         }
     }

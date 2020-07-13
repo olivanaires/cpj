@@ -1,5 +1,6 @@
 package br.com.ota.cpjbackend.model;
 
+import br.com.ota.cpjbackend.model.enums.ContractType;
 import br.com.ota.cpjbackend.model.enums.DurationType;
 import br.com.ota.cpjbackend.model.enums.PaymentType;
 import lombok.Data;
@@ -26,11 +27,17 @@ public class Contract extends BaseEntity {
     @Size(max = 50)
     private String number;
 
-    @Size(max = 200)
-    private String description;
+    @NotNull
+    private ContractType description;
 
     @NotNull
     private Date signatureDate;
+
+    @NotNull
+    private Date endDate;
+
+    @NotNull
+    private Date paymentDate;
 
     @NotNull
     private DurationType durationType;
@@ -48,16 +55,21 @@ public class Contract extends BaseEntity {
     @JoinTable(name = "contracts_contractors", joinColumns = @JoinColumn(name = "contract_id"), inverseJoinColumns = @JoinColumn(name = "contractors_id"))
     private Set<Client> contractors;
 
-    @NotNull
-    @ElementCollection(targetClass = PaymentType.class)
-    @Enumerated(EnumType.STRING)
-    private List<PaymentType> paymentTypes;
+//    @NotNull
+//    @ElementCollection(targetClass = PaymentType.class)
+//    @Enumerated(EnumType.STRING)
+//    private List<PaymentType> paymentTypes;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
+
     private BigDecimal paymentValue;
 
     private BigDecimal entryValue;
 
     private BigDecimal endPercentValue;
+
+    private String observations;
 
 }

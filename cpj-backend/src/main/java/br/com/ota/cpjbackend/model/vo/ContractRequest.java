@@ -1,6 +1,7 @@
 package br.com.ota.cpjbackend.model.vo;
 
 import br.com.ota.cpjbackend.model.Contract;
+import br.com.ota.cpjbackend.model.enums.ContractType;
 import br.com.ota.cpjbackend.model.enums.DurationType;
 import br.com.ota.cpjbackend.model.enums.PaymentType;
 import lombok.Getter;
@@ -18,9 +19,13 @@ public class ContractRequest {
 
     private String number;
 
-    private String description;
+    private ContractType description;
 
     private Date signatureDate;
+
+    private Date endDate;
+
+    private Date paymentDate;
 
     private DurationType durationType;
 
@@ -34,9 +39,13 @@ public class ContractRequest {
 
     private List<PaymentType> paymentTypes;
 
+    private PaymentType paymentType;
+
     private List<String> hired;
 
     private List<String> contractors;
+
+    private String observations;
 
     public Contract toContract(Contract contract) {
         contract.setNumber(this.getNumber());
@@ -44,10 +53,14 @@ public class ContractRequest {
         contract.setSignatureDate(this.getSignatureDate());
         contract.setDurationType(this.getDurationType());
         contract.setDuration(this.getDuration());
-        contract.setPaymentTypes(this.getPaymentTypes());
+//        contract.setPaymentTypes(this.getPaymentTypes());
         contract.setPaymentValue(this.getPaymentValue());
         contract.setEntryValue(this.getEntryValue());
         contract.setEndPercentValue(this.getEndPercentValue());
+        contract.setEndDate(this.endDate);
+        contract.setPaymentDate(this.paymentDate);
+        contract.setPaymentType(this.paymentType);
+        contract.setObservations(this.observations);
         return contract;
     }
 

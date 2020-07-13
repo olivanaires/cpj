@@ -5,6 +5,7 @@
                 <b-datepicker :id="idValue" v-model="localValue"
                               today-button
                               reset-button
+                              :disabled="disabled"
                               :value-as-date="true"
                               :date-format-options="{day: '2-digit', month: '2-digit', year: 'numeric'}"
                               label-close-button="Fechar"
