@@ -48,7 +48,11 @@
                         <b-row>
                             <b-form-group label="Observações" class="col-md-12">
                                 <b-textarea v-model="contract.observations" rows="3"></b-textarea>
-
+                            </b-form-group>
+                            <b-form-group label="Contrato (PDF)" class="col-md-12">
+                                <b-form-file v-model="file" accept="application/pdf" browse-text="Buscar"
+                                             placeholder="Selecionar arquivo..."
+                                             drop-placeholder="Soltar arquivo aqui..."></b-form-file>
                             </b-form-group>
                         </b-row>
 
@@ -57,6 +61,7 @@
                             </b-button>
                         </b-row>
                     </b-form>
+
                 </ValidationObserver>
             </b-card-body>
         </b-card>
@@ -70,6 +75,7 @@
     import ClientService from '../../services/client.service';
     import LawyerService from '../../services/lawyer.service';
     import ContractService from '../../services/contract.service';
+    import FileService from '../../services/file.service';
 
     export default {
         name: 'contractRegister',
@@ -84,6 +90,7 @@
                 selectedContractors: [],
                 lawyerList: [],
                 selectedLawyers: [],
+                file: null,
                 contractType: [
                     {item: 'HONORARY', name: 'Honorário'},
                     {item: 'LEGAL_ADVICE', name: 'Assessoria '}
@@ -112,8 +119,6 @@
                 ContractService.load(this.id)
                     .then(response => {
                         this.contract = response.data;
-                        // this.contract.signatureDate = new Date(response.data.signatureDate);
-                        // this.contract.duration = String(response.data.duration);
                         this.contract.hired = response.data.hired.map(h => h.oabNumber);
                         this.contract.contractors = response.data.contractors.map(h => h.cpfCnpj);
                     })
@@ -131,37 +136,42 @@
                 }
             },
             filteredClientList() {
-                // if (this.clientFilter) {
-                //     const exp = new RegExp(this.clientFilter, 'i');
-                //     return this.clientList.filter(c => exp.test(c.clientName));
-                // } else {
                 return this.clientList;
-                // }
             },
             filteredLawyerList() {
-                // if (this.lawyerFilter) {
-                //     const exp = new RegExp(this.lawyerFilter, 'i');
-                //     return this.lawyerList.filter(l => exp.test(l.name));
-                // } else {
                 return this.lawyerList;
-                // }
             }
         },
         methods: {
             handleRegister(event) {
-                ContractService.create(this.contract).then(
-                    response => {
-                        event.target.reset();
-                        this.contract.signatureDate = new Date();
-                        this.$swal({icon: 'success', title: response.data.message});
-                        if (this.id) {
-                            this.$router.push({name: 'contractList'})
+                ContractService.create(this.contract)
+                    .then(
+                        response => {
+                            event.target.reset();
+                            this.contract.signatureDate = new Date();
+                            this.$swal({icon: 'success', title: response.data.message});
+                            if (this.id) {
+                                this.$router.push({name: 'contractList'})
+                            }
+
+                            if (this.file) {
+                                let formData = new FormData();
+                                formData.append("file", this.file);
+                                formData.append("contractId", response.data.id);
+                                FileService.upload(formData)
+                                    .then(result => {
+                                        console.dir(result.data);
+                                        this.file = null;
+                                    }, error => {
+                                        console.error(error);
+                                    });
+                            }
                         }
-                    },
-                    error => {
-                        this.$swal({icon: 'error', title: error.response.data.message});
-                    }
-                );
+                    )
+                    .then()
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+
+
             },
             updateEndDate() {
                 if (this.contract.duration > 0) {

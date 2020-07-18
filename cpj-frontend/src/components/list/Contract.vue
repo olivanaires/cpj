@@ -15,8 +15,13 @@
                         {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
                     </template>
                     <template v-slot:cell(options)="data">
-                        <b-link :to="`/contractUpdate/${data.item.id}`">
+                        <b-link :to="`/contractUpdate/${data.item.id}`" class="option-item"
+                                v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
+                        </b-link>
+                        <b-link v-on:click="download(data.item.fileId)" v-if="data.item.fileId" class="option-item"
+                                v-b-tooltip.hover title="Visualizar PDF">
+                            <b-icon icon="file-text"></b-icon>
                         </b-link>
                     </template>
                 </b-table>
@@ -29,6 +34,7 @@
     import moment from 'moment';
     import ContractService from '../../services/contract.service';
     import durationTypes from '../../models/durationType';
+    import FileService from '../../services/file.service';
 
     export default {
         name: 'contractList',
@@ -91,6 +97,15 @@
             },
             toStringDuratioType(value) {
                 return durationTypes.filter(dt => dt.value === value)[0].text;
+            },
+            download(value) {
+                FileService.download(value).then(
+                    response => {
+                        const file = new Blob([response.data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                    }
+                )
             }
         }
     }
@@ -105,5 +120,9 @@
     .header-title {
         font-size: 25px !important;
         text-align: center;
+    }
+
+    .option-item svg {
+        width: 1.5em;
     }
 </style>

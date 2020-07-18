@@ -15,7 +15,8 @@
                         {{ toStringRole(data.item.roles) }}
                     </template>
                     <template v-slot:cell(options)="data">
-                        <b-link :to="`/userUpdate/${data.item.id}`">
+                        <b-link :to="`/userUpdate/${data.item.id}`"
+                                v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
                         </b-link>
                     </template>

@@ -7,4 +7,9 @@ import lombok.Getter;
 public class MessageResponse {
 
     @Getter private String message;
+    @Getter private Long id;
+
+    public MessageResponse(String message) {
+        this.message = message;
+    }
 }

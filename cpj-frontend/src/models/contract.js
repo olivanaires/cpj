@@ -27,7 +27,8 @@ export default class Contract {
             paymentValue: '',
             entryValue: '',
             endPercentValue: '',
-            observations: ''
+            observations: '',
+            fileId: ''
         }
     }
 

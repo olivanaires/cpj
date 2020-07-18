@@ -17,7 +17,8 @@
                         {{ data.item.contactPhoneOne ? data.item.contactPhoneOne : data.item.contactPhoneTwo }}
                     </template>
                     <template v-slot:cell(options)="data">
-                        <b-link :to="`/clientUpdate/${data.item.id}`">
+                        <b-link :to="`/clientUpdate/${data.item.id}`"
+                                v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
                         </b-link>
                     </template>

@@ -93,7 +93,7 @@
                     this.$store.dispatch('auth/login', this.user).then(
                         response => {
                             this.$cookies.set('token', response);
-                            this.$router.push('/profile');
+                            this.$router.push('/home');
                         },
                         error => {
                             this.loading = false;

@@ -46,9 +46,9 @@ public class ContractController {
             }
             contract.setHired(new HashSet<>(lawyers));
             contract.setContractors(new HashSet<>(customers));
-            contractRepository.save(contract);
+            Contract entity = contractRepository.save(contract);
 
-            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.contract")));
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.contract"), entity.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(new MessageResponse(messagePropertie.getMessage("message.error")));
@@ -72,4 +72,5 @@ public class ContractController {
                     .body(new MessageResponse(ex.getMessage()));
         }
     }
+
 }

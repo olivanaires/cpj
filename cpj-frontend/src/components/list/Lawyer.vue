@@ -12,7 +12,8 @@
                         {{ data.index + 1 }}
                     </template>
                     <template v-slot:cell(options)="data">
-                        <b-link :to="`/lawyerUpdate/${data.item.id}`">
+                        <b-link :to="`/lawyerUpdate/${data.item.id}`"
+                                v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
                         </b-link>
                     </template>
