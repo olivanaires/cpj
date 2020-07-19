@@ -9,7 +9,7 @@ class FileService {
             Authorization: authHeader().Authorization,
             "Content-Type": "multipart/form-data"
         }
-        return axios.post(API_URL + 'upload', file, {headers: header});
+        return axios.post(API_URL + 'uploadContractFile', file, {headers: header});
     }
 
     list() {

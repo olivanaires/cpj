@@ -150,9 +150,6 @@
                             event.target.reset();
                             this.contract.signatureDate = new Date();
                             this.$swal({icon: 'success', title: response.data.message});
-                            if (this.id) {
-                                this.$router.push({name: 'contractList'})
-                            }
 
                             if (this.file) {
                                 let formData = new FormData();
@@ -160,12 +157,17 @@
                                 formData.append("contractId", response.data.id);
                                 FileService.upload(formData)
                                     .then(result => {
-                                        console.dir(result.data);
+                                        console.log(result.data.message);
                                         this.file = null;
+                                        if (this.id) {
+                                            this.$router.push({name: 'contractList'})
+                                        }
                                     }, error => {
-                                        console.error(error);
+                                        this.$swal({icon: 'error', title: error.response.data.message});
                                     });
                             }
+
+
                         }
                     )
                     .then()

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/file")
@@ -27,16 +28,26 @@ public class FileController {
     private final ContractRepository contractRepository;
 
 
-    @PostMapping("/upload")
-    public ResponseEntity<MessageResponse> upload(@RequestParam("file") MultipartFile fileRequest, @RequestParam("contractId") Long contractId) {
+    @PostMapping("/uploadContractFile")
+    public ResponseEntity<MessageResponse> uploadContractFile(@RequestParam("file") MultipartFile fileRequest, @RequestParam("contractId") Long contractId) {
         try {
-            File file = new File(fileRequest.getOriginalFilename(), fileRequest.getContentType(), fileRequest.getBytes());
-            file = fileRepository.save(file);
-
             Contract contract = contractRepository.findById(contractId)
                     .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
-            contract.setFileId(file.getId());
-            contractRepository.save(contract);
+
+            File file;
+            if (Objects.isNull(contract.getFileId())) {
+                file = new File(fileRequest.getOriginalFilename(), fileRequest.getContentType(), fileRequest.getBytes());
+                file = fileRepository.save(file);
+                contract.setFileId(file.getId());
+                contractRepository.save(contract);
+            } else {
+                file = fileRepository.findById(contract.getFileId())
+                        .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.file")));
+                file.setName(fileRequest.getOriginalFilename());
+                file.setMimetype(fileRequest.getContentType());
+                file.setContent(fileRequest.getBytes());
+                fileRepository.save(file);
+            }
 
             return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.upload.success")));
         } catch (IOException | NotFoundException ex) {

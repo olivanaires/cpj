@@ -41,6 +41,11 @@ const routes = [
         component: () => import('../components/register/Contract.vue')
     },
     {
+        path: '/honoraryRegister',
+        name: 'honoraryRegister',
+        component: () => import('../components/register/Honorary.vue')
+    },
+    {
         path: '/expenseRegister',
         name: 'expenseRegister',
         component: () => import('../components/register/Expense.vue')
@@ -66,6 +71,11 @@ const routes = [
         component: () => import('../components/list/Contract.vue')
     },
     {
+        path: '/honoraryList',
+        name: 'honoraryList',
+        component: () => import('../components/list/Honorary.vue')
+    },
+    {
         path: '/expenseList',
         name: 'expenseList',
         component: () => import('../components/list/Expense.vue')
@@ -89,6 +99,11 @@ const routes = [
         path: '/contractUpdate/:id',
         name: 'contractUpdate',
         component: () => import('../components/register/Contract.vue')
+    },
+    {
+        path: '/honoraryUpdate/:id',
+        name: 'honoraryUpdate',
+        component: () => import('../components/register/Honorary.vue')
     },
     {
         path: '/expenseUpdate/:id',
