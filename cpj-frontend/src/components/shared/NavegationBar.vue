@@ -16,7 +16,7 @@
                     <!-- CADASTRO -->
                     <b-nav-item-dropdown v-if="currentUser" right>
                         <template v-slot:button-content>
-                            <b-icon icon="person-plus"></b-icon>
+                            <b-icon icon="plus-square"></b-icon>
                             Cadastro
                         </template>
                         <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
@@ -50,12 +50,12 @@
                             {{ currentUser.name ? currentUser.name : currentUser.username }}
                         </template>
                         <b-dropdown-item to="/profile">
-                            <b-icon icon="person-fill"></b-icon>
-                            Profile
+<!--                            <b-icon icon="person-fill"></b-icon>-->
+                            Perfil
                         </b-dropdown-item>
                         <b-dropdown-item @click.prevent="logOut">
-                            <b-icon icon="box-arrow-right"></b-icon>
-                            Sign Out
+<!--                            <b-icon icon="box-arrow-right"></b-icon>-->
+                            Sair
                         </b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
