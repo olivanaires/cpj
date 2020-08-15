@@ -16,6 +16,10 @@
                                 v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
                         </b-link>
+                        <b-link v-on:click="remove(data.item.id)"
+                                v-b-tooltip.hover title="Apagar">
+                            <b-icon icon="trash"></b-icon>
+                        </b-link>
                     </template>
                 </b-table>
             </b-card-body>
@@ -83,6 +87,14 @@
                 } else {
                     return this.lawyers;
                 }
+            }
+        },
+        methods: {
+            remove(id) {
+                LawyerService.remove(id)
+                    .then(response => this.$swal({icon: 'success', title: response.data.message}))
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
+                    .finally(() => LawyerService.list().then( response => this.lawyers = response.data ));
             }
         }
     }

@@ -1,20 +1,24 @@
 package br.com.ota.cpjbackend.controller;
 
 import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
+import br.com.ota.cpjbackend.model.Contract;
 import br.com.ota.cpjbackend.model.Lawyer;
 import br.com.ota.cpjbackend.model.Role;
 import br.com.ota.cpjbackend.model.User;
 import br.com.ota.cpjbackend.model.vo.LawyerRequest;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
 import br.com.ota.cpjbackend.model.vo.UserRequest;
+import br.com.ota.cpjbackend.repository.ContractRepository;
 import br.com.ota.cpjbackend.repository.LawyerRepository;
 import br.com.ota.cpjbackend.repository.RoleRepository;
+import br.com.ota.cpjbackend.repository.UserRepository;
 import br.com.ota.cpjbackend.service.EmailService;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +36,8 @@ public class LawyerController {
     private final PasswordEncoder encoder;
     private final EmailService emailService;
     private final RoleRepository roleRepository;
+    private final ContractRepository contractRepository;
+    private final UserRepository userRepository;
 
     @PostMapping("/create")
     public ResponseEntity<MessageResponse> create(@Valid @RequestBody LawyerRequest lawyerRequest) {
@@ -86,6 +92,29 @@ public class LawyerController {
         try {
             Lawyer lawyer = lawyerRepository.findById(Long.parseLong(id))
                     .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.lawyer")));
+            return ResponseEntity.ok(lawyer.toLawyerRequest());
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> remove(@PathVariable String id) {
+        try {
+            Lawyer lawyer = lawyerRepository.findById(Long.parseLong(id))
+                    .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.lawyer")));
+
+            List<Contract> contractsByLawyers = contractRepository.findAllByHiredContains(lawyer);
+
+            if (CollectionUtils.isEmpty(contractsByLawyers)) {
+                userRepository.deleteById(lawyer.getUser().getId());
+                lawyerRepository.delete(lawyer);
+            } else {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse(messagePropertie.getMessage("message.error.lawyer.with.contract")));
+            }
+
             return ResponseEntity.ok(lawyer.toLawyerRequest());
         } catch (NotFoundException ex) {
             return ResponseEntity.badRequest()
