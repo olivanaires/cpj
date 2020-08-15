@@ -12,7 +12,7 @@
             </div>
         </b-form-row>
         <b-form-row>
-            <c-input-text label-value="Logradoureo" v-model="value.street" roles-value="required"
+            <c-input-text label-value="Logradouro" v-model="value.street" roles-value="required"
                           bs-col-value="col-md-10" :required="true" :capitalize="true"/>
             <c-input-text label-value="Número" v-model="value.number" roles-value="required"
                           bs-col-value="col-md-2" :required="true"/>
