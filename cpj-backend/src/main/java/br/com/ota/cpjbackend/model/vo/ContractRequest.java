@@ -53,7 +53,6 @@ public class ContractRequest {
         contract.setSignatureDate(this.getSignatureDate());
         contract.setDurationType(this.getDurationType());
         contract.setDuration(this.getDuration());
-//        contract.setPaymentTypes(this.getPaymentTypes());
         contract.setPaymentValue(this.getPaymentValue());
         contract.setEntryValue(this.getEntryValue());
         contract.setEndPercentValue(this.getEndPercentValue());

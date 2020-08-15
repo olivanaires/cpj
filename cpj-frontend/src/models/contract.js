@@ -3,7 +3,7 @@ export default class Contract {
     constructor(sigDate, durationType, paymentType) {
         this.description = 'HONORARY';
         this.signatureDate = sigDate;
-        this.duration = 0;
+        this.duration = 1;
         this.durationType = durationType;
         this.paymentType = paymentType;
         this.hired = [];

@@ -1,23 +1,17 @@
 package br.com.ota.cpjbackend.controller;
 
 import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
-import br.com.ota.cpjbackend.model.Client;
+import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Contract;
-import br.com.ota.cpjbackend.model.Lawyer;
 import br.com.ota.cpjbackend.model.vo.ContractRequest;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
-import br.com.ota.cpjbackend.repository.ClientRepository;
-import br.com.ota.cpjbackend.repository.ContractRepository;
-import br.com.ota.cpjbackend.repository.LawyerRepository;
-import javassist.NotFoundException;
+import br.com.ota.cpjbackend.service.ContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/contract")
@@ -25,30 +19,14 @@ import java.util.Objects;
 public class ContractController {
 
     private final MessagePropertie messagePropertie;
-    private final ClientRepository clientRepository;
-    private final LawyerRepository lawyerRepository;
-    private final ContractRepository contractRepository;
+    private final ContractService contractService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody ContractRequest contractRequest) {
 
         try {
-            List<Client> customers = clientRepository.findAllByCpfCnpjIn(contractRequest.getContractors());
-            List<Lawyer> lawyers = lawyerRepository.findAllByOabNumberIn(contractRequest.getHired());
-
-            Contract contract;
-            if (Objects.isNull(contractRequest.getId())) {
-                contract = contractRequest.toContract(new Contract());
-            } else {
-                contract = contractRepository.findById(contractRequest.getId())
-                        .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
-                contractRequest.toContract(contract);
-            }
-            contract.setHired(new HashSet<>(lawyers));
-            contract.setContractors(new HashSet<>(customers));
-            Contract entity = contractRepository.save(contract);
-
-            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.contract"), entity.getId()));
+            Long contractId = contractService.create(contractRequest);
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.contract"), contractId));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(new MessageResponse(messagePropertie.getMessage("message.error")));
@@ -57,17 +35,28 @@ public class ContractController {
 
     @GetMapping("/list")
     public ResponseEntity<?> list() {
-        List<Contract> all = contractRepository.findAll();
+        List<Contract> all = contractService.list();
         return ResponseEntity.ok(all);
     }
 
     @GetMapping("/load/{id}")
     public ResponseEntity<?> load(@PathVariable String id) {
         try {
-            Contract contract = contractRepository.findById(Long.parseLong(id))
-                    .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
+            Contract contract = contractService.load(id);
             return ResponseEntity.ok(contract);
-        } catch (NotFoundException ex) {
+        } catch (AppException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id) {
+        try {
+            contractService.remove(id);
+
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.deleted.success", "model.contract")));
+        } catch (AppException ex) {
             return ResponseEntity.badRequest()
                     .body(new MessageResponse(ex.getMessage()));
         }

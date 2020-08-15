@@ -54,11 +54,6 @@ public class Contract extends BaseEntity {
     @JoinTable(name = "contracts_contractors", joinColumns = @JoinColumn(name = "contract_id"), inverseJoinColumns = @JoinColumn(name = "contractors_id"))
     private Set<Client> contractors;
 
-//    @NotNull
-//    @ElementCollection(targetClass = PaymentType.class)
-//    @Enumerated(EnumType.STRING)
-//    private List<PaymentType> paymentTypes;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;

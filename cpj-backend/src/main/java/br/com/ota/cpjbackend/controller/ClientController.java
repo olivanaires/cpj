@@ -1,20 +1,15 @@
 package br.com.ota.cpjbackend.controller;
 
 import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
+import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Client;
-import br.com.ota.cpjbackend.model.enums.ClientType;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
-import br.com.ota.cpjbackend.repository.ClientRepository;
-import javassist.NotFoundException;
+import br.com.ota.cpjbackend.service.ClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/client")
@@ -22,29 +17,36 @@ import java.util.Objects;
 public class ClientController {
 
     private final MessagePropertie messagePropertie;
-    private final ClientRepository clientRepository;
+    private final ClientService clientService;
 
     @PostMapping("/create")
     public ResponseEntity<MessageResponse> create(@Valid @RequestBody Client client) {
-        clientRepository.save(client);
+        clientService.save(client);
         return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.client")));
     }
 
     @GetMapping("/list")
     public ResponseEntity<?> list() {
-        List<Client> customers = clientRepository.findAll(Sort.by("clientName"));
-        return ResponseEntity.ok(customers);
+        return ResponseEntity.ok(clientService.list());
     }
 
     @GetMapping("/load/{id}")
     public ResponseEntity<?> load(@PathVariable String id) {
         try {
-            Client client = clientRepository.findById(Long.parseLong(id))
-                    .orElseThrow(() -> new NotFoundException(messagePropertie.getMessage("message.model.not.found", "model.client")));
+            Client client = clientService.load(id);
             return ResponseEntity.ok(client);
-        } catch (NotFoundException ex) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse(ex.getMessage()));
+        } catch (AppException ex) {
+            return ResponseEntity.badRequest().body(new MessageResponse(ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id) {
+        try {
+            clientService.remove(id);
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.deleted.success", "model.client")));
+        } catch (AppException ex) {
+            return ResponseEntity.badRequest().body(new MessageResponse(ex.getMessage()));
         }
     }
 

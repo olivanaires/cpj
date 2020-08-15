@@ -5,7 +5,8 @@ module.exports = {
       '/api': {
         target: 'http://localhost:8080',
         ws: true,
-        changeOrigin: true
+        changeOrigin: true,
+        logLevel: "debug"
       },
       '/auth': {
         target: 'http://localhost:8080',

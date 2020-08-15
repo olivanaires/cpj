@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ContractRepository extends BaseRepository<Contract, Long> {
 
+    List<Contract> findAllByContractorsContains( Client contractor );
+
 }

@@ -14,7 +14,7 @@
                                       bs-col-value="col-md-7" :capitalize="true"/>
                     </b-form-row>
 
-                    <b-form-row>
+                    <b-form-row v-if="client.clientType === 'PF'">
                         <c-input-text label-value="Número RG" v-model="client.identityNumber" bs-col-value="col-md-4"/>
                         <c-input-select label-value="Situação Matrimonial" v-model="client.maritalStatus"
                                         roles-value="required" :option-values="maritalStatus" bs-col-value="col-md-4"/>
@@ -72,7 +72,7 @@
                     .then(response => {
                         this.client = response.data;
                     })
-                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             } else {
                 this.client.clientType = 'PF';
                 this.client.maritalStatus = 'SINGLE';

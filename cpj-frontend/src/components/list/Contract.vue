@@ -23,6 +23,10 @@
                                 v-b-tooltip.hover title="Visualizar PDF">
                             <b-icon icon="file-text"></b-icon>
                         </b-link>
+                        <b-link v-on:click="remove(data.item.id)"
+                                v-b-tooltip.hover title="Apagar">
+                            <b-icon icon="trash"></b-icon>
+                        </b-link>
                     </template>
                 </b-table>
             </b-card-body>
@@ -76,10 +80,7 @@
             }
         },
         created() {
-            ContractService.list().then(
-                response => {
-                    this.listResult = response.data;
-                });
+            ContractService.list().then(response => this.listResult = response.data);
         },
         computed: {
             filteredLawyers() {
@@ -106,6 +107,12 @@
                         window.open(fileURL);
                     }
                 )
+            },
+            remove(id) {
+                ContractService.remove(id)
+                    .then(response => {this.$swal({icon: 'success', title: response.data.message})})
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
+                    .finally(() => ContractService.list().then( response => this.listResult = response.data ));
             }
         }
     }

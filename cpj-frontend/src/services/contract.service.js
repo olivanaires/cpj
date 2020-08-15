@@ -16,6 +16,10 @@ class ContractService {
         return axios.get(API_URL + `load/${id}`, {headers: authHeader()});
     }
 
+    remove(id) {
+        return axios.delete(API_URL + `remove/${id}`, {headers: authHeader()});
+    }
+
 }
 
 export default new ContractService();
