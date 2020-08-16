@@ -1,37 +1,47 @@
 <template>
-    <b-row align-h="center">
-        <b-card :header="title" header-class="header-title" class="col-md-12">
-            <b-card-body>
-                <b-card header="Filtros" class="col-md-12">
-                    <b-input type="search" class="filtro" @input="filter = $event"
-                             placeholder="Filtre por parte do número"/>
-                </b-card>
+    <div>
+        <b-row align-h="center">
+            <b-card :header="title" header-class="header-title" class="col-md-12">
+                <b-card-body>
+                    <b-card header="Filtros" class="col-md-12">
+                        <b-input type="search" class="filtro" @input="filter = $event"
+                                 placeholder="Filtre por parte do número"/>
+                    </b-card>
 
-                <b-table striped hover bordered :items="filteredLawyers" :fields="fields">
-                    <template v-slot:cell(index)="data">
-                        {{ data.index + 1 }}
-                    </template>
-                    <template v-slot:cell(duration)="data">
-                        {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
-                    </template>
-                    <template v-slot:cell(options)="data">
-                        <b-link :to="`/contractUpdate/${data.item.id}`" class="option-item"
-                                v-b-tooltip.hover title="Editar">
-                            <b-icon icon="pencil"></b-icon>
-                        </b-link>
-                        <b-link v-on:click="download(data.item.fileId)" v-if="data.item.fileId" class="option-item"
-                                v-b-tooltip.hover title="Visualizar PDF">
-                            <b-icon icon="file-text"></b-icon>
-                        </b-link>
-                        <b-link v-on:click="remove(data.item.id)"
-                                v-b-tooltip.hover title="Apagar">
-                            <b-icon icon="trash"></b-icon>
-                        </b-link>
-                    </template>
-                </b-table>
-            </b-card-body>
-        </b-card>
-    </b-row>
+                    <b-table striped hover bordered :items="filteredLawyers" :fields="fields">
+                        <template v-slot:cell(index)="data">
+                            {{ data.index + 1 }}
+                        </template>
+                        <template v-slot:cell(duration)="data">
+                            {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
+                        </template>
+                        <template v-slot:cell(options)="data">
+                            <b-link :to="`/contractUpdate/${data.item.id}`" class="option-item"
+                                    v-b-tooltip.hover title="Editar">
+                                <b-icon icon="pencil"></b-icon>
+                            </b-link>
+                            <b-link v-on:click="remove(data.item.id)" class="option-item"
+                                    v-b-tooltip.hover title="Apagar">
+                                <b-icon icon="trash"></b-icon>
+                            </b-link>
+                            <b-link v-b-modal.show-contract v-on:click="show(data.item.id)" class="option-item"
+                                    v-b-tooltip.hover title="Visualizar">
+                                <b-icon icon="search"></b-icon>
+                            </b-link>
+                            <b-link v-on:click="download(data.item.fileId)" v-if="data.item.fileId" class="option-item"
+                                    v-b-tooltip.hover title="Abrir PDF">
+                                <b-icon icon="file-text"></b-icon>
+                            </b-link>
+                        </template>
+                    </b-table>
+                </b-card-body>
+            </b-card>
+        </b-row>
+
+        <b-modal id="show-contract" title="Visualizar Contrato" centered size="xl" hide-footer>
+            <c-contract-show :contract="contractToShow" />
+        </b-modal>
+    </div>
 </template>
 
 <script>
@@ -39,14 +49,17 @@
     import ContractService from '../../services/contract.service';
     import durationTypes from '../../models/durationType';
     import FileService from '../../services/file.service';
-
+    import CContractShow from "../show/Contract";
+    import Contract from "../../models/contract";
     export default {
         name: 'contractList',
+        components: {CContractShow},
         data() {
             return {
                 title: 'Listagem de Contratos',
                 filter: '',
                 listResult: [],
+                contractToShow: new Contract(),
                 fields: [
                     {
                         key: 'index',
@@ -110,9 +123,16 @@
             },
             remove(id) {
                 ContractService.remove(id)
-                    .then(response => {this.$swal({icon: 'success', title: response.data.message})})
+                    .then(response => {
+                        this.$swal({icon: 'success', title: response.data.message})
+                    })
                     .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
-                    .finally(() => ContractService.list().then( response => this.listResult = response.data ));
+                    .finally(() => ContractService.list().then(response => this.listResult = response.data));
+            },
+            show(id) {
+                ContractService.load(id)
+                    .then(response => this.contractToShow = response.data)
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             }
         }
     }
@@ -127,9 +147,5 @@
     .header-title {
         font-size: 25px !important;
         text-align: center;
-    }
-
-    .option-item svg {
-        width: 1.5em;
     }
 </style>

@@ -34,3 +34,9 @@
     }
   };
 </script>
+
+<style>
+  .option-item svg {
+    width: 1.5em;
+  }
+</style>

@@ -19,7 +19,7 @@
                         {{ data.item.contract.number + ' - ' + data.item.contract.description }}
                     </template>
                     <template v-slot:cell(options)="data">
-                        <b-link :to="`/expenseUpdate/${data.item.id}`"
+                        <b-link :to="`/expenseUpdate/${data.item.id}`" class="option-item"
                                 v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
                         </b-link>
