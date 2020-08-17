@@ -20,6 +20,10 @@ class ContractService {
         return axios.delete(API_URL + `remove/${id}`, {headers: authHeader()});
     }
 
+    paymentsThisMonth() {
+        return  axios.get(API_URL + '/list/with-payment-this-month', {headers: authHeader()});
+    }
+
 }
 
 export default new ContractService();

@@ -62,4 +62,10 @@ public class ContractController {
         }
     }
 
+    @GetMapping("/list/with-payment-this-month")
+    public ResponseEntity<?> contractsWithPaymentForCurrentlyMonth() {
+        List<Contract> contracts = contractService.contractsWithPaymentForCurrentlyMonth();
+        return ResponseEntity.ok(contracts);
+    }
+
 }

@@ -14,6 +14,7 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -70,5 +71,9 @@ public class ContractService {
         }
 
         contractRepository.delete(contract);
+    }
+
+    public List<Contract> contractsWithPaymentForCurrentlyMonth() {
+        return contractRepository.findAllWithPaymentForCurrentlyMonth();
     }
 }
