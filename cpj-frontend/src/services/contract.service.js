@@ -21,7 +21,7 @@ class ContractService {
     }
 
     paymentsThisMonth() {
-        return  axios.get(API_URL + '/list/with-payment-this-month', {headers: authHeader()});
+        return  axios.get(API_URL + 'list/with-payment-this-month', {headers: authHeader()});
     }
 
 }
