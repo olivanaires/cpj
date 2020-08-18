@@ -49,18 +49,15 @@
 </template>
 
 <script>
-    import Contract from "../../models/contract";
     import paymentTypes from '../../models/paymentType';
 
     export default {
         name: 'c-contract-show',
         props: {
-            contract: {required: true, default: new Contract()}
+            contract: {required: true}
         },
         data() {
             return {
-                paymentType: '',
-                description: '',
                 clientFields: [
                     {
                         key: 'cpfCnpj',
@@ -87,10 +84,16 @@
                 ]
             }
         },
-        created() {
-            if (this.contract) {
-                this.description = this.contract.description === 'HONORARY' ? 'Honorário' : 'Acessoria';
-                this.paymentType = paymentTypes.find(pt => pt.item === this.contract.paymentType).name;
+        computed: {
+            paymentType: {
+                get() {
+                    return this.contract.paymentType ? paymentTypes.find(pt => pt.item === this.contract.paymentType).name : '';
+                },
+                set(value) {return value}
+            },
+            description: {
+                get() {return this.contract.description === 'HONORARY' ? 'Honorário' : 'Acessoria'},
+                set(value) {return value}
             }
         }
     }
