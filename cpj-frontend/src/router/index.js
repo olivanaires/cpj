@@ -51,6 +51,11 @@ const routes = [
         component: () => import('../components/register/Expense.vue')
     },
     {
+        path: '/additiveRegister',
+        name: 'additiveRegister',
+        component: () => import('../components/register/Additive.vue')
+    },
+    {
         path: '/userList',
         name: 'userList',
         component: () => import('../components/list/User.vue')

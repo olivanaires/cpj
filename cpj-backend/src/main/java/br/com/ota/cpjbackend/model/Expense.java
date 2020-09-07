@@ -1,6 +1,7 @@
 package br.com.ota.cpjbackend.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -16,6 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "expenses")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Expense extends BaseEntity {
 
     @NotBlank

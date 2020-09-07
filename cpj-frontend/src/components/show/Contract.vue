@@ -11,7 +11,7 @@
                                   :disabled="true"/>
                     <c-input-text v-model="contract.duration" input-type="number" label-value="Duração Meses"
                                   bs-col-value="col-md-2" :disabled="true"/>
-                    <c-input-date v-model="contract.endDate" label-value="Data Final" bs-col-value="col-md-2"
+                    <c-input-date v-model="contract.signatureEndDate" label-value="Data Final" bs-col-value="col-md-2"
                                   :disabled="true"/>
                 </b-row>
 
@@ -43,6 +43,22 @@
                     </b-form-group>
                 </b-row>
 
+                <b-row>
+                    <b-form-group label="Aditivo(s)" class="col-md-6">
+                        <b-table :fields="additiveFields" :items="contract.additives"></b-table>
+                    </b-form-group>
+                    <b-form-group label="Arquivo(s)" class="col-md-6">
+                    <b-table :fields="fileFields" :items="files">
+                        <template v-slot:cell(options)="data">
+                            <b-link v-on:click="download(data.item.id)" v-if="data.item.id" class="option-item"
+                                    v-b-tooltip.hover title="Abrir PDF">
+                                <b-icon icon="file-text"></b-icon>
+                            </b-link>
+                        </template>
+                    </b-table>
+                </b-form-group>
+                </b-row>
+
             </b-card-body>
         </b-card>
     </b-row>
@@ -50,11 +66,13 @@
 
 <script>
     import paymentTypes from '../../models/paymentType';
+    import FileService from '../../services/file.service';
 
     export default {
         name: 'c-contract-show',
         props: {
-            contract: {required: true}
+            contract: {required: true},
+            files: {default: []},
         },
         data() {
             return {
@@ -62,25 +80,47 @@
                     {
                         key: 'cpfCnpj',
                         label: 'CPF/CNPJ',
-                        thClass: 'teste'
                     },
                     {
                         key: 'clientName',
                         label: 'Nome',
-                        thClass: 'teste'
                     },
                 ],
                 lawyerFields: [
                     {
                         key: 'oabNumber',
                         label: 'OAB',
-                        thClass: 'teste'
                     },
                     {
                         key: 'name',
                         label: 'Nome',
-                        thClass: 'teste'
                     },
+                ],
+                additiveFields: [
+                    {
+                        key: 'signatureDate',
+                        label: 'Data Assinatura',
+                        formatter: "formatDateValue",
+                    },
+                    {
+                        key: 'duration',
+                        label: 'Duração',
+                    },
+                    {
+                        key: 'signatureEndDate',
+                        label: 'Data Final',
+                        formatter: "formatDateValue",
+                    },
+                ],
+                fileFields: [
+                    {
+                        key: 'name',
+                        label: 'Nome',
+                    },
+                    {
+                        key: 'options',
+                        label: 'Opções',
+                    }
                 ]
             }
         },
@@ -89,17 +129,30 @@
                 get() {
                     return this.contract.paymentType ? paymentTypes.find(pt => pt.item === this.contract.paymentType).name : '';
                 },
-                set(value) {return value}
+                set(value) {
+                    return value
+                }
             },
             description: {
-                get() {return this.contract.description === 'HONORARY' ? 'Honorário' : 'Acessoria'},
-                set(value) {return value}
+                get() {
+                    return this.contract.description === 'HONORARY' ? 'Honorário' : 'Acessoria'
+                },
+                set(value) {
+                    return value
+                }
             }
+        },
+        methods: {
+            download(value) {
+                FileService.download(value).then(
+                    response => {
+                        const file = new Blob([response.data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                    }
+                )
+            },
         }
     }
 
 </script>
-
-<style scoped>
-
-</style>

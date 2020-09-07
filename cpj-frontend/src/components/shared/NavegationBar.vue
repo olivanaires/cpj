@@ -23,6 +23,7 @@
                         <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/lawyerRegister">Advogado</b-dropdown-item>
                         <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
                         <b-dropdown-item to="/contractRegister">Contrato</b-dropdown-item>
+                        <b-dropdown-item to="/additiveRegister">Aditivo</b-dropdown-item>
                         <b-dropdown-item to="/honoraryRegister">Honorário</b-dropdown-item>
                         <b-dropdown-item to="/expenseRegister">Despesa</b-dropdown-item>
                     </b-nav-item-dropdown>

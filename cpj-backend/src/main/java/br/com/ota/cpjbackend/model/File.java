@@ -3,16 +3,16 @@ package br.com.ota.cpjbackend.model;
 import br.com.ota.cpjbackend.model.helper.View;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "files")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class File extends BaseEntity {
 
     @JsonView(View.FileInfo.class)
@@ -22,6 +22,9 @@ public class File extends BaseEntity {
 
     @Lob
     private byte[] content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Contract contract;
 
     public File(String name, String mimetype, byte[] content){
         this.name = name;

@@ -8,7 +8,7 @@
                                  placeholder="Filtre por parte do número"/>
                     </b-card>
 
-                    <b-table striped hover bordered :items="filteredLawyers" :fields="fields">
+                    <b-table striped hover bordered :items="filtered" :fields="fields">
                         <template v-slot:cell(index)="data">
                             {{ data.index + 1 }}
                         </template>
@@ -28,10 +28,10 @@
                                     v-b-tooltip.hover title="Visualizar">
                                 <b-icon icon="search"></b-icon>
                             </b-link>
-                            <b-link v-on:click="download(data.item.fileId)" v-if="data.item.fileId" class="option-item"
-                                    v-b-tooltip.hover title="Abrir PDF">
-                                <b-icon icon="file-text"></b-icon>
-                            </b-link>
+<!--                            <b-link v-on:click="download(data.item.fileId)" v-if="data.item.fileId" class="option-item"-->
+<!--                                    v-b-tooltip.hover title="Abrir PDF">-->
+<!--                                <b-icon icon="file-text"></b-icon>-->
+<!--                            </b-link>-->
                         </template>
                     </b-table>
                 </b-card-body>
@@ -39,18 +39,21 @@
         </b-row>
 
         <b-modal id="show-contract" title="Visualizar Contrato" centered size="xl" hide-footer>
-            <c-contract-show :contract="contractToShow" />
+            <c-contract-show :contract="contractToShow" :files="filesToShow" />
         </b-modal>
     </div>
 </template>
 
 <script>
+    import axios from 'axios';
     import moment from 'moment';
     import ContractService from '../../services/contract.service';
     import durationTypes from '../../models/durationType';
     import FileService from '../../services/file.service';
     import CContractShow from "../show/Contract";
     import Contract from "../../models/contract";
+    import AddtiveService from '../../services/additive.service';
+
     export default {
         name: 'contractList',
         components: {CContractShow},
@@ -60,6 +63,7 @@
                 filter: '',
                 listResult: [],
                 contractToShow: new Contract(),
+                filesToShow: [],
                 fields: [
                     {
                         key: 'index',
@@ -74,6 +78,13 @@
                     {
                         key: 'signatureDate',
                         label: 'Data Assinatura',
+                        sortable: true,
+                        thClass: 'bg-dark text-white',
+                        formatter: "formatDateAssigned"
+                    },
+                    {
+                        key: 'endDate',
+                        label: 'Data Final',
                         sortable: true,
                         thClass: 'bg-dark text-white',
                         formatter: "formatDateAssigned"
@@ -96,7 +107,7 @@
             ContractService.list().then(response => this.listResult = response.data);
         },
         computed: {
-            filteredLawyers() {
+            filtered() {
                 if (this.filter) {
                     let exp = new RegExp(this.filter.trim(), 'i');
                     return this.listResult.filter(c => exp.test(c.number));
@@ -130,8 +141,25 @@
                     .finally(() => ContractService.list().then(response => this.listResult = response.data));
             },
             show(id) {
-                ContractService.load(id)
-                    .then(response => this.contractToShow = response.data)
+                this.filesToShow = [];
+                const requests = [
+                    ContractService.load(id),
+                    AddtiveService.loadByContract(id),
+                    FileService.listByContract(id)
+                ];
+                axios.all(requests)
+                    .then(result => {
+                        this.contractToShow = result[0].data;
+
+                        const additives = result[1].data.map(item => ({
+                                signatureDate: moment(String(item.signatureDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY'),
+                                duration: item.duration,
+                                signatureEndDate: moment(String(item.signatureEndDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY')
+                        }));
+                        this.contractToShow.additives.push(...additives);
+
+                        this.filesToShow.push(...result[2].data)
+                    })
                     .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             }
         }

@@ -4,6 +4,7 @@ import br.com.ota.cpjbackend.model.annotation.Conditional;
 import br.com.ota.cpjbackend.model.enums.ClientType;
 import br.com.ota.cpjbackend.model.enums.MaritalStatus;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "customers")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Client extends BaseEntity {
 
     @NotBlank

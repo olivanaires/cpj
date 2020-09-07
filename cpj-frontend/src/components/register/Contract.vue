@@ -79,8 +79,8 @@
                                 <b-textarea v-model="contract.observations" rows="3"></b-textarea>
                             </b-form-group>
                             <b-form-group label="Contrato (PDF)" class="col-md-12">
-                                <b-form-file v-model="file" accept="application/pdf" browse-text="Buscar"
-                                             placeholder="Selecionar arquivo..."
+                                <b-form-file v-model="files" accept="application/pdf" browse-text="Buscar"
+                                             placeholder="Selecionar arquivo..." multiple
                                              drop-placeholder="Soltar arquivo aqui..."></b-form-file>
                             </b-form-group>
                         </b-row>
@@ -121,7 +121,7 @@
                 selectedContractors: [],
                 lawyerList: [],
                 selectedLawyers: [],
-                file: null,
+                files: null,
                 contractor: null,
                 employee: null,
                 contractType: [
@@ -181,17 +181,18 @@
                             this.selectedContractors = [];
                             this.$swal({icon: 'success', title: response.data.message});
 
-
-                            if (this.file) {
-                                let formData = new FormData();
-                                formData.append("file", this.file);
-                                formData.append("contractId", response.data.id);
-                                FileService.upload(formData)
-                                    .then(() => {
-                                        this.file = null;
-                                    }, error => {
-                                        this.$swal({icon: 'error', title: error.response.data.message});
-                                    });
+                            if (this.files && this.files.length > 0) {
+                                this.files.forEach(file => {
+                                    let formData = new FormData();
+                                    formData.append("file", file);
+                                    formData.append("contractId", response.data.id);
+                                    FileService.upload(formData)
+                                        .then(() => {
+                                            this.files = null;
+                                        }, error => {
+                                            this.$swal({icon: 'error', title: error.response.data.message});
+                                        });
+                                });
                             }
                         }
                     )
@@ -215,6 +216,7 @@
                     }
 
                     this.contract.endDate = date;
+                    this.contract.signatureEndDate = date;
                 }
             },
             addClient() {

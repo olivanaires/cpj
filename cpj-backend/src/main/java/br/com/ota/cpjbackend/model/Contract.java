@@ -4,6 +4,7 @@ import br.com.ota.cpjbackend.model.enums.ContractType;
 import br.com.ota.cpjbackend.model.enums.DurationType;
 import br.com.ota.cpjbackend.model.enums.PaymentType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -19,8 +20,8 @@ import java.util.Set;
 @Entity
 @Table(name = "contracts")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Contract extends BaseEntity {
-
 
     @NotBlank
     @Size(max = 50)
@@ -31,6 +32,8 @@ public class Contract extends BaseEntity {
 
     @NotNull
     private Date signatureDate;
+
+    private Date signatureEndDate;
 
     @NotNull
     private Date endDate;
@@ -67,5 +70,8 @@ public class Contract extends BaseEntity {
     private String observations;
 
     private Long fileId;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Additive> additives;
 
 }

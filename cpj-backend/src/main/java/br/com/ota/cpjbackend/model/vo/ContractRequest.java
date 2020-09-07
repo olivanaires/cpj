@@ -23,6 +23,8 @@ public class ContractRequest {
 
     private Date signatureDate;
 
+    private Date signatureEndDate;
+
     private Date endDate;
 
     private Date paymentDate;
@@ -51,6 +53,7 @@ public class ContractRequest {
         contract.setNumber(this.getNumber());
         contract.setDescription(this.getDescription());
         contract.setSignatureDate(this.getSignatureDate());
+        contract.setSignatureEndDate(this.getSignatureEndDate());
         contract.setDurationType(this.getDurationType());
         contract.setDuration(this.getDuration());
         contract.setPaymentValue(this.getPaymentValue());

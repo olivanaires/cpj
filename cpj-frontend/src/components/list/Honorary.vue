@@ -39,7 +39,7 @@
         name: 'honoraryList',
         data() {
             return {
-                title: 'Listagem de Despesas',
+                title: 'Listagem de Honorários',
                 filter: '',
                 contractFilter: '',
                 list: [],

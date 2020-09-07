@@ -2,6 +2,7 @@ package br.com.ota.cpjbackend.model;
 
 import br.com.ota.cpjbackend.model.vo.LawyerRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "lawyers")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Lawyer extends BaseEntity {
 
     @NotBlank

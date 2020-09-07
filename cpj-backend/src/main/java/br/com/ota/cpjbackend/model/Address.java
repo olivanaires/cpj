@@ -1,6 +1,7 @@
 package br.com.ota.cpjbackend.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "adresses")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Address extends BaseEntity {
 
     @NotBlank

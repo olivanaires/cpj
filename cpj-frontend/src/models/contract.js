@@ -3,12 +3,13 @@ export default class Contract {
     constructor(sigDate, durationType, paymentType) {
         this.description = 'HONORARY';
         this.signatureDate = sigDate;
-        this.duration = 1;
+        this.duration = 0;
         this.durationType = durationType;
         this.paymentType = paymentType;
         this.hired = [];
         this.contractors = [];
         this.endDate = sigDate;
+        this.signatureEndDate = sigDate;
         this.paymentDate = sigDate;
     }
 
@@ -17,18 +18,19 @@ export default class Contract {
             number: '',
             description: '',
             signatureDate: '',
+            signatureEndDate: '',
             endDate: '',
             paymentDate: '',
             durationType: '',
             duration: '',
             hired: [],
             contractors: [],
-            // paymentTypes: [],
+            additives: [],
             paymentValue: '',
             entryValue: '',
             endPercentValue: '',
             observations: '',
-            fileId: ''
+            fileId: '',
         }
     }
 
