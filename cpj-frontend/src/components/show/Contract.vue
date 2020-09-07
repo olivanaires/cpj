@@ -48,15 +48,19 @@
                         <b-table :fields="additiveFields" :items="contract.additives"></b-table>
                     </b-form-group>
                     <b-form-group label="Arquivo(s)" class="col-md-6">
-                    <b-table :fields="fileFields" :items="files">
-                        <template v-slot:cell(options)="data">
-                            <b-link v-on:click="download(data.item.id)" v-if="data.item.id" class="option-item"
-                                    v-b-tooltip.hover title="Abrir PDF">
-                                <b-icon icon="file-text"></b-icon>
-                            </b-link>
-                        </template>
-                    </b-table>
-                </b-form-group>
+                        <b-table :fields="fileFields" :items="filesToShow">
+                            <template v-slot:cell(options)="data">
+                                <b-link v-on:click="download(data.item.id)" v-if="data.item.id" class="option-item"
+                                        v-b-tooltip.hover title="Abrir PDF">
+                                    <b-icon icon="file-text"></b-icon>
+                                </b-link>
+                                <b-link v-on:click="remove(data.item.id)" class="option-item"
+                                        v-b-tooltip.hover title="Apagar">
+                                    <b-icon icon="trash"></b-icon>
+                                </b-link>
+                            </template>
+                        </b-table>
+                    </b-form-group>
                 </b-row>
 
             </b-card-body>
@@ -72,10 +76,12 @@
         name: 'c-contract-show',
         props: {
             contract: {required: true},
-            files: {default: []},
+            // files: {default: []},
+            contractId: {required: true}
         },
         data() {
             return {
+                filesToShow: [],
                 clientFields: [
                     {
                         key: 'cpfCnpj',
@@ -124,6 +130,11 @@
                 ]
             }
         },
+        created() {
+            FileService.listByContract(this.contractId).then(response => {
+                this.filesToShow.push(...response.data);
+            });
+        },
         computed: {
             paymentType: {
                 get() {
@@ -151,6 +162,17 @@
                         window.open(fileURL);
                     }
                 )
+            },
+            remove(id) {
+                FileService.remove(id)
+                    .then(response => {
+                        this.$swal({icon: 'success', title: response.data.message})
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
+                    .finally(() => FileService.listByContract(this.contractId).then(response => {
+                        this.filesToShow = [];
+                        this.filesToShow.push(...response.data);
+                    }));
             },
         }
     }

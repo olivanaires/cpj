@@ -81,7 +81,18 @@
                             <b-form-group label="Contrato (PDF)" class="col-md-12">
                                 <b-form-file v-model="files" accept="application/pdf" browse-text="Buscar"
                                              placeholder="Selecionar arquivo..." multiple
-                                             drop-placeholder="Soltar arquivo aqui..."></b-form-file>
+                                             drop-placeholder="Soltar arquivo aqui...">
+                                    <template slot="file-name" slot-scope="{ names }">
+                                        <span v-if="names.length <= 4">
+                                            <b-badge v-for="name in names" v-bind:key="name" style="margin-right: 2px;"
+                                                     variant="dark">{{ name }}
+                                            </b-badge>
+                                        </span>
+                                        <b-badge v-if="names.length > 4" variant="dark" class="ml-1">
+                                            {{ names.length }} arquivos selecionados
+                                        </b-badge>
+                                    </template>
+                                </b-form-file>
                             </b-form-group>
                         </b-row>
 
@@ -266,12 +277,12 @@
                 .then(result => {
                     this.clientList.push({cpfCnpj: '', clientName: 'Selecione um cliente...'});
                     this.clientList.push(...result[0].data);
-                    if (this.clientList[0]){
+                    if (this.clientList[0]) {
                         this.contractor = this.clientList[0].cpfCnpj;
                     }
 
                     this.lawyerList = result[1].data;
-                    if (this.lawyerList[0]){
+                    if (this.lawyerList[0]) {
                         this.employee = this.lawyerList[0].oabNumber;
                     }
 

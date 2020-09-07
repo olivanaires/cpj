@@ -68,6 +68,12 @@ public class FileController {
         }
     }
 
+    @DeleteMapping("/delete/{fileId}")
+    public ResponseEntity<?> delete(@PathVariable Long fileId) {
+        fileRepository.deleteById(fileId);
+        return ResponseEntity.ok().body(messagePropertie.getMessage("message.deleted.success", "model.file"));
+    }
+
     @GetMapping("/listByContract/{id}")
     public ResponseEntity<?> listByContract(@PathVariable String id) {
         List<FileResponse> filesByContentId = fileRepository.findAllByContractId(Long.parseLong(id));

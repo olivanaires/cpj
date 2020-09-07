@@ -24,6 +24,10 @@ class FileService {
         return axios.get(API_URL + `download/${fileId}`, {headers: authHeader(), responseType: 'blob'});
     }
 
+    remove(fileId) {
+        return axios.delete(API_URL + `delete/${fileId}`, {headers: authHeader(), responseType: 'blob'});
+    }
+
 }
 
 export default new FileService();

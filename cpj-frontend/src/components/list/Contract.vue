@@ -28,10 +28,6 @@
                                     v-b-tooltip.hover title="Visualizar">
                                 <b-icon icon="search"></b-icon>
                             </b-link>
-<!--                            <b-link v-on:click="download(data.item.fileId)" v-if="data.item.fileId" class="option-item"-->
-<!--                                    v-b-tooltip.hover title="Abrir PDF">-->
-<!--                                <b-icon icon="file-text"></b-icon>-->
-<!--                            </b-link>-->
                         </template>
                     </b-table>
                 </b-card-body>
@@ -39,7 +35,7 @@
         </b-row>
 
         <b-modal id="show-contract" title="Visualizar Contrato" centered size="xl" hide-footer>
-            <c-contract-show :contract="contractToShow" :files="filesToShow" />
+            <c-contract-show :contract="contractToShow" :contract-id="contractIdToShow"  />
         </b-modal>
     </div>
 </template>
@@ -63,7 +59,8 @@
                 filter: '',
                 listResult: [],
                 contractToShow: new Contract(),
-                filesToShow: [],
+                contractIdToShow: null,
+                // filesToShow: [],
                 fields: [
                     {
                         key: 'index',
@@ -142,10 +139,11 @@
             },
             show(id) {
                 this.filesToShow = [];
+                this.contractIdToShow = id;
                 const requests = [
                     ContractService.load(id),
                     AddtiveService.loadByContract(id),
-                    FileService.listByContract(id)
+                    // FileService.listByContract(id)
                 ];
                 axios.all(requests)
                     .then(result => {
@@ -158,7 +156,7 @@
                         }));
                         this.contractToShow.additives.push(...additives);
 
-                        this.filesToShow.push(...result[2].data)
+                        // this.filesToShow.push(...result[2].data)
                     })
                     .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             }
