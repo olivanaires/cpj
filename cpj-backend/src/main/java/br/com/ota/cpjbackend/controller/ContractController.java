@@ -85,4 +85,10 @@ public class ContractController {
         return ResponseEntity.ok(contracts);
     }
 
+    @GetMapping("/list/with-end-date-this-month")
+    public ResponseEntity<?> findAllWithEndDateForCurrentlyMonth() {
+        List<Contract> contracts = contractService.findAllWithEndDateForCurrentlyMonth();
+        return ResponseEntity.ok(contracts);
+    }
+
 }

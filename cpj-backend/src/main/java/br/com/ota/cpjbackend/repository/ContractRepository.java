@@ -17,4 +17,7 @@ public interface ContractRepository extends BaseRepository<Contract, Long> {
     @Query(value = "select cont from Contract cont where cont.endDate > now() and (cont.paymentType in ('MONTHLY', 'MONTHLY_HONORARY') or (cont.paymentType in ('YEARLY', 'YEARLY_HONORARY') and extract( 'month' from cont.paymentDate) = extract( 'month' from now())))")
     List<Contract> findAllWithPaymentForCurrentlyMonth();
 
+    @Query(value = "select cont from Contract cont where extract( 'month' from cont.endDate) = extract( 'month' from now())")
+    List<Contract> findAllWithEndDateForCurrentlyMonth();
+
 }

@@ -79,4 +79,8 @@ public class ContractService {
     public void update(Contract contract) {
         contractRepository.save(contract);
     }
+
+    public List<Contract> findAllWithEndDateForCurrentlyMonth() {
+        return contractRepository.findAllWithEndDateForCurrentlyMonth();
+    }
 }
