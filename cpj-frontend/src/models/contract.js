@@ -26,6 +26,7 @@ export default class Contract {
             hired: [],
             contractors: [],
             additives: [],
+            paymentSignatureValue: '',
             paymentValue: '',
             entryValue: '',
             endPercentValue: '',

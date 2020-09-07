@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -16,6 +17,8 @@ public class AdditiveRequest {
     private Integer duration;
 
     private String contractId;
+
+    private BigDecimal paymentValue;
 
     private Date endDate;
 

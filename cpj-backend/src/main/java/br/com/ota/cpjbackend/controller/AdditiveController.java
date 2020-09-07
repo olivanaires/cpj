@@ -31,10 +31,12 @@ public class AdditiveController {
         try {
             Contract contract = contractService.load(additiveRequest.getContractId());
             contract.setEndDate(additiveRequest.getEndDate());
+            contract.setPaymentValue(additiveRequest.getPaymentValue());
             contractService.update(contract);
 
             Additive additive = new Additive();
             additive.setDuration(additiveRequest.getDuration());
+            additive.setPaymentValue(additiveRequest.getPaymentValue());
             additive.setSignatureDate(additiveRequest.getSignatureDate());
             additive.setSignatureEndDate(additiveRequest.getEndDate());
             additive.setContract(contract);
@@ -65,8 +67,8 @@ public class AdditiveController {
 
     @GetMapping("/loadByContract/{id}")
     public ResponseEntity<?> loadByContract(@PathVariable String id) {
-        List<Additive> additive = additiveService.fidByContractId(Long.parseLong(id));
-        return ResponseEntity.ok(additive);
+        List<Additive> additives = additiveService.fidByContractId(Long.parseLong(id));
+        return ResponseEntity.ok(additives);
     }
 
     @DeleteMapping("/remove/{id}")

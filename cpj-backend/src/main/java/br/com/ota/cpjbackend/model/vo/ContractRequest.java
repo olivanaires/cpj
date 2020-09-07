@@ -33,6 +33,8 @@ public class ContractRequest {
 
     private Integer duration;
 
+    private BigDecimal paymentSignatureValue;
+
     private BigDecimal paymentValue;
 
     private BigDecimal entryValue;
@@ -50,15 +52,16 @@ public class ContractRequest {
     private String observations;
 
     public Contract toContract(Contract contract) {
-        contract.setNumber(this.getNumber());
-        contract.setDescription(this.getDescription());
-        contract.setSignatureDate(this.getSignatureDate());
-        contract.setSignatureEndDate(this.getSignatureEndDate());
-        contract.setDurationType(this.getDurationType());
-        contract.setDuration(this.getDuration());
-        contract.setPaymentValue(this.getPaymentValue());
-        contract.setEntryValue(this.getEntryValue());
-        contract.setEndPercentValue(this.getEndPercentValue());
+        contract.setNumber(this.number);
+        contract.setDescription(this.description);
+        contract.setSignatureDate(this.signatureDate);
+        contract.setSignatureEndDate(this.signatureEndDate);
+        contract.setDurationType(this.durationType);
+        contract.setDuration(this.duration);
+        contract.setPaymentValue(this.paymentValue);
+        contract.setPaymentSignatureValue(this.paymentSignatureValue);
+        contract.setEntryValue(this.entryValue);
+        contract.setEndPercentValue(this.endPercentValue);
         contract.setEndDate(this.endDate);
         contract.setPaymentDate(this.paymentDate);
         contract.setPaymentType(this.paymentType);

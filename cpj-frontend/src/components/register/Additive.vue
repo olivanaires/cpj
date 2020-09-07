@@ -6,6 +6,12 @@
                     <b-form name="form" @submit.prevent="handleRegister">
 
                         <b-form-row>
+                            <b-form-group label="Valor *" class=" col-md-6">
+                                <money v-model="additive.paymentValue" class="form-control"></money>
+                            </b-form-group>
+                        </b-form-row>
+
+                        <b-form-row>
                             <c-input-date label-value="Data Pagamento" v-model="additive.signatureDate"
                                           roles-value="required" @input="updateEndDate"
                                           bs-col-value="col-md-5"/>
@@ -24,7 +30,7 @@
                         </b-form-row>
 
                         <b-row align-h="center">
-                            <b-button class="col-md-2" type="submit" :disabled="invalid" variant="success">Salvar
+                            <b-button class="col-md-2" type="submit" :disabled="invalidForm(invalid)" variant="success">Salvar
                             </b-button>
                         </b-row>
 
@@ -91,8 +97,12 @@
                 } else {
                     this.additive.endDate = this.additive.signatureDate
                 }
+            },
+            invalidForm(invalid) {
+                return invalid
+                    || this.additive.paymentValue <= 0;
             }
-        }
+        },
     }
 
 </script>

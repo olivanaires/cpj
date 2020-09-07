@@ -61,6 +61,8 @@ public class Contract extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
+    private BigDecimal paymentSignatureValue;
+
     private BigDecimal paymentValue;
 
     private BigDecimal entryValue;

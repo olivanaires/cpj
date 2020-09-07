@@ -35,7 +35,7 @@
         </b-row>
 
         <b-modal id="show-contract" title="Visualizar Contrato" centered size="xl" hide-footer>
-            <c-contract-show :contract="contractToShow" :contract-id="contractIdToShow"  />
+            <c-contract-show :contract="contractToShow" :contract-id="contractIdToShow"/>
         </b-modal>
     </div>
 </template>
@@ -60,7 +60,6 @@
                 listResult: [],
                 contractToShow: new Contract(),
                 contractIdToShow: null,
-                // filesToShow: [],
                 fields: [
                     {
                         key: 'index',
@@ -138,27 +137,33 @@
                     .finally(() => ContractService.list().then(response => this.listResult = response.data));
             },
             show(id) {
-                this.filesToShow = [];
                 this.contractIdToShow = id;
                 const requests = [
                     ContractService.load(id),
                     AddtiveService.loadByContract(id),
-                    // FileService.listByContract(id)
                 ];
+
                 axios.all(requests)
                     .then(result => {
                         this.contractToShow = result[0].data;
 
                         const additives = result[1].data.map(item => ({
-                                signatureDate: moment(String(item.signatureDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY'),
-                                duration: item.duration,
-                                signatureEndDate: moment(String(item.signatureEndDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY')
+                            signatureDate: moment(String(item.signatureDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY'),
+                            duration: item.duration,
+                            signatureEndDate: moment(String(item.signatureEndDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY'),
+                            paymentValue: this.formatCurrency(item.paymentValue)
                         }));
                         this.contractToShow.additives.push(...additives);
 
-                        // this.filesToShow.push(...result[2].data)
                     })
                     .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+            },
+            formatCurrency(value) {
+                let formatter = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                });
+                return formatter.format(value);
             }
         }
     }

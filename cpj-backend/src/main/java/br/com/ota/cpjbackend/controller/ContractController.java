@@ -5,7 +5,9 @@ import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Additive;
 import br.com.ota.cpjbackend.model.Contract;
 import br.com.ota.cpjbackend.model.vo.ContractRequest;
+import br.com.ota.cpjbackend.model.vo.FileResponse;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
+import br.com.ota.cpjbackend.repository.FileRepository;
 import br.com.ota.cpjbackend.service.AdditiveService;
 import br.com.ota.cpjbackend.service.ContractService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class ContractController {
     private final MessagePropertie messagePropertie;
     private final ContractService contractService;
     private final AdditiveService additiveService;
+    private final FileRepository fileRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody ContractRequest contractRequest) {
@@ -60,6 +63,11 @@ public class ContractController {
             List<Additive> additives = additiveService.fidByContractId(id);
             for (Additive a : additives) {
                 additiveService.remove(a.getId());
+            }
+
+            List<FileResponse> files = fileRepository.findAllByContractId(id);
+            for (FileResponse file : files) {
+                fileRepository.deleteById(file.getId());
             }
 
             contractService.remove(id);

@@ -19,7 +19,7 @@
                     <c-input-text v-model="paymentType" label-value="Tipo Pagamento" bs-col-value="col-md-3"
                                   :disabled="true"/>
                     <b-form-group label="Valor" class=" col-md-3">
-                        <money v-model="contract.paymentValue" class="form-control" :disabled="true"></money>
+                        <money v-model="contract.paymentSignatureValue" class="form-control" :disabled="true"></money>
                     </b-form-group>
                     <b-form-group label="Entrada" class=" col-md-3">
                         <money v-model="contract.entryValue" class="form-control" :disabled="true"></money>
@@ -76,7 +76,6 @@
         name: 'c-contract-show',
         props: {
             contract: {required: true},
-            // files: {default: []},
             contractId: {required: true}
         },
         data() {
@@ -116,6 +115,10 @@
                         key: 'signatureEndDate',
                         label: 'Data Final',
                         formatter: "formatDateValue",
+                    },
+                    {
+                        key: 'paymentValue',
+                        label: 'Valor',
                     },
                 ],
                 fileFields: [

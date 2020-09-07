@@ -24,7 +24,7 @@
                                             label-value="Tipo Pagamento" roles-value="required"
                                             bs-col-value="col-md-3"/>
                             <b-form-group :label="paymentValueLabel" class=" col-md-3">
-                                <money v-model="contract.paymentValue" class="form-control"></money>
+                                <money v-model="contract.paymentSignatureValue" class="form-control"></money>
                             </b-form-group>
                             <b-form-group label="Entrada" class=" col-md-3">
                                 <money v-model="contract.entryValue" class="form-control"></money>
@@ -183,6 +183,7 @@
         },
         methods: {
             handleRegister(event) {
+                this.contract.paymentValue = this.contract.paymentSignatureValue;
                 ContractService.create(this.contract)
                     .then(
                         response => {
