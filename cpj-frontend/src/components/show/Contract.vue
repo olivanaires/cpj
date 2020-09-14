@@ -11,8 +11,10 @@
                                   :disabled="true"/>
                     <c-input-text v-model="contract.duration" input-type="number" label-value="Duração Meses"
                                   bs-col-value="col-md-2" :disabled="true"/>
-                    <c-input-date v-model="contract.signatureEndDate" label-value="Data Final" bs-col-value="col-md-2"
+                    <c-input-date v-if="contract.signatureEndDate" v-model="contract.signatureEndDate" label-value="Data Final" bs-col-value="col-md-2"
                                   :disabled="true"/>
+                    <c-input-text v-if="!contract.signatureEndDate" v-model="undefinedValue" label-value="Data Final"
+                                  bs-col-value="col-md-2" disabled/>
                 </b-row>
 
                 <b-row>
@@ -80,6 +82,7 @@
         },
         data() {
             return {
+                undefinedValue: 'Indefinido',
                 filesToShow: [],
                 clientFields: [
                     {

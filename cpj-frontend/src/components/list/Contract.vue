@@ -13,7 +13,12 @@
                             {{ data.index + 1 }}
                         </template>
                         <template v-slot:cell(duration)="data">
-                            {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
+                            <span v-if="data.item.duration > 0">
+                                {{ data.item.duration + " " + toStringDuratioType(data.item.durationType) }}
+                            </span>
+                            <span v-if="data.item.duration <= 0">
+                                Indefinida
+                            </span>
                         </template>
                         <template v-slot:cell(options)="data">
                             <b-link :to="`/contractUpdate/${data.item.id}`" class="option-item"
@@ -114,7 +119,11 @@
         },
         methods: {
             formatDateAssigned(value) {
-                return moment(String(value), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY');
+                if (value) {
+                    return moment(String(value), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY');
+                } else {
+                    return 'Indefinida';
+                }
             },
             toStringDuratioType(value) {
                 return durationTypes.filter(dt => dt.value === value)[0].text;
