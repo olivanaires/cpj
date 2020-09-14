@@ -35,7 +35,6 @@ public class Contract extends BaseEntity {
 
     private Date signatureEndDate;
 
-    @NotNull
     private Date endDate;
 
     @NotNull

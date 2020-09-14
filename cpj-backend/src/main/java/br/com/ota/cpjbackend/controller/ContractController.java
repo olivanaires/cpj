@@ -4,6 +4,7 @@ import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
 import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Additive;
 import br.com.ota.cpjbackend.model.Contract;
+import br.com.ota.cpjbackend.model.enums.ContractType;
 import br.com.ota.cpjbackend.model.vo.ContractRequest;
 import br.com.ota.cpjbackend.model.vo.FileResponse;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/contract")
@@ -29,6 +31,11 @@ public class ContractController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody ContractRequest contractRequest) {
+
+        if (ContractType.LEGAL_ADVICE.equals(contractRequest.getDescription()) && (Objects.isNull(contractRequest.getEndDate()) || Objects.isNull(contractRequest.getSignatureEndDate()))) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(messagePropertie.getMessage("message.error.required", "model.contract.endDate")));
+        }
 
         try {
             Long contractId = contractService.create(contractRequest);

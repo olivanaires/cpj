@@ -12,11 +12,13 @@
                                             bs-col-value="col-md-3"/>
                             <c-input-date v-model="contract.signatureDate" roles-value="required" @input="updateEndDate"
                                           label-value="Data Assinatura" bs-col-value="col-md-2"/>
-                            <c-input-text v-model="contract.duration" roles-value="required|numeric" input-type="number"
+                            <c-input-text v-model="contract.duration" :roles-value="isRequired" input-type="number"
                                           label-value="Duração Meses" bs-col-value="col-md-2"
                                           @input="updateEndDate"/>
-                            <c-input-date v-model="contract.endDate" roles-value="required" label-value="Data Final"
+                            <c-input-date v-if="showEndDate" v-model="contract.endDate" :roles-value="isRequired" label-value="Data Final"
                                           bs-col-value="col-md-2" :disabled="true"/>
+                            <c-input-text v-if="!showEndDate" v-model="undefinedValue" label-value="Data Final"
+                                          bs-col-value="col-md-2" disabled/>
                         </b-row>
 
                         <b-row>
@@ -124,6 +126,7 @@
         data() {
             return {
                 title: 'Cadastro de Contrato',
+                undefinedValue: 'Indefinido',
                 id: this.$route.params.id,
                 durationTypeOptions: durationTypes,
                 paymentTypeOptions: paymentTypes,
@@ -183,7 +186,13 @@
         },
         methods: {
             handleRegister(event) {
+                if (this.contract.duration <= 0) {
+                    this.contract.endDate = null;
+                    this.contract.signatureEndDate = null;
+                }
+
                 this.contract.paymentValue = this.contract.paymentSignatureValue;
+
                 ContractService.create(this.contract)
                     .then(
                         response => {
@@ -229,6 +238,9 @@
 
                     this.contract.endDate = date;
                     this.contract.signatureEndDate = date;
+                } else {
+                    this.contract.endDate = null;
+                    this.contract.signatureEndDate = null;
                 }
             },
             addClient() {
@@ -306,6 +318,16 @@
                 } else {
                     return 'Valor';
                 }
+            },
+            isRequired() {
+                if (this.contract.description === 'HONORARY') {
+                    return '';
+                } else {
+                    return 'required';
+                }
+            },
+            showEndDate() {
+                return this.contract.duration > 0;
             }
         }
     }
