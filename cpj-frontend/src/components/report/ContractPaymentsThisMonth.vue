@@ -5,6 +5,7 @@
         </b-pagination>
 
         <b-table id="my-table" striped hover show-empty
+                 empty-text="Não existe pagamentos a receber esse mês"
                  :items="contracts"
                  :fields="fields"
                  :per-page="perPage"

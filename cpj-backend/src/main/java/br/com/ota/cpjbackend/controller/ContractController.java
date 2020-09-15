@@ -8,6 +8,7 @@ import br.com.ota.cpjbackend.model.enums.ContractType;
 import br.com.ota.cpjbackend.model.vo.ContractRequest;
 import br.com.ota.cpjbackend.model.vo.FileResponse;
 import br.com.ota.cpjbackend.model.vo.MessageResponse;
+import br.com.ota.cpjbackend.model.vo.PaymentResponse;
 import br.com.ota.cpjbackend.repository.FileRepository;
 import br.com.ota.cpjbackend.service.AdditiveService;
 import br.com.ota.cpjbackend.service.ContractService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/contract")
@@ -80,6 +82,17 @@ public class ContractController {
             contractService.remove(id);
 
             return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.deleted.success", "model.contract")));
+        } catch (AppException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/list/payments/{id}")
+    public ResponseEntity<?> contractPayments(@PathVariable String id) {
+        try {
+            Set<PaymentResponse> contracts = contractService.contractPayments(id);
+            return ResponseEntity.ok(contracts);
         } catch (AppException ex) {
             return ResponseEntity.badRequest()
                     .body(new MessageResponse(ex.getMessage()));

@@ -39,4 +39,8 @@
   .option-item svg {
     width: 1.5em;
   }
+
+  .center {
+    text-align: center;
+  }
 </style>

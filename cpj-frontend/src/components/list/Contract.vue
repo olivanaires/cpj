@@ -39,21 +39,19 @@
             </b-card>
         </b-row>
 
-        <b-modal id="show-contract" title="Visualizar Contrato" centered size="xl" hide-footer>
+        <b-modal id="show-contract" title="Visualizar Contrato" centered size="xl" scrollable hide-footer>
             <c-contract-show :contract="contractToShow" :contract-id="contractIdToShow"/>
         </b-modal>
     </div>
 </template>
 
 <script>
-    import axios from 'axios';
     import moment from 'moment';
     import ContractService from '../../services/contract.service';
     import durationTypes from '../../models/durationType';
     import FileService from '../../services/file.service';
     import CContractShow from "../show/Contract";
     import Contract from "../../models/contract";
-    import AddtiveService from '../../services/additive.service';
 
     export default {
         name: 'contractList',
@@ -99,7 +97,8 @@
                     {
                         key: 'options',
                         label: 'Opções',
-                        thClass: 'bg-dark text-white'
+                        thClass: 'center bg-dark text-white',
+                        tdClass: 'center',
                     }
                 ]
             }
@@ -147,25 +146,10 @@
             },
             show(id) {
                 this.contractIdToShow = id;
-                const requests = [
-                    ContractService.load(id),
-                    AddtiveService.loadByContract(id),
-                ];
-
-                axios.all(requests)
-                    .then(result => {
-                        this.contractToShow = result[0].data;
-
-                        const additives = result[1].data.map(item => ({
-                            signatureDate: moment(String(item.signatureDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY'),
-                            duration: item.duration,
-                            signatureEndDate: moment(String(item.signatureEndDate), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY'),
-                            paymentValue: this.formatCurrency(item.paymentValue)
-                        }));
-                        this.contractToShow.additives.push(...additives);
-
-                    })
-                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
+                ContractService.load(id).then(response => {
+                    this.contractToShow = response.data;
+                })
+                .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             },
             formatCurrency(value) {
                 let formatter = new Intl.NumberFormat('pt-BR', {

@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -21,10 +21,10 @@ import java.util.Date;
 public class Additive extends BaseEntity {
 
     @NotNull
-    private Date signatureDate;
+    private LocalDate signatureDate;
 
     @NotNull
-    private Date signatureEndDate;
+    private LocalDate signatureEndDate;
 
     @NotNull
     private BigDecimal paymentValue;

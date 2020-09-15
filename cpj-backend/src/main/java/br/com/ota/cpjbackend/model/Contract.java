@@ -3,9 +3,11 @@ package br.com.ota.cpjbackend.model;
 import br.com.ota.cpjbackend.model.enums.ContractType;
 import br.com.ota.cpjbackend.model.enums.DurationType;
 import br.com.ota.cpjbackend.model.enums.PaymentType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,14 +15,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "contracts")
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"additives", "hired", "contractors"})
+@ToString(of = {"number", "description"})
 public class Contract extends BaseEntity {
 
     @NotBlank
@@ -31,14 +34,14 @@ public class Contract extends BaseEntity {
     private ContractType description;
 
     @NotNull
-    private Date signatureDate;
+    private LocalDate signatureDate;
 
-    private Date signatureEndDate;
+    private LocalDate signatureEndDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
     @NotNull
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
     @NotNull
     private DurationType durationType;
@@ -72,7 +75,8 @@ public class Contract extends BaseEntity {
 
     private Long fileId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contract")
     private Set<Additive> additives;
 
 }

@@ -35,4 +35,6 @@ public class Expense extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Contract contract;
 
+    private boolean payed;
+
 }

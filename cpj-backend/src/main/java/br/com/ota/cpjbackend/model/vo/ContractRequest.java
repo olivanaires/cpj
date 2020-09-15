@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -21,13 +21,13 @@ public class ContractRequest {
 
     private ContractType description;
 
-    private Date signatureDate;
+    private LocalDate signatureDate;
 
-    private Date signatureEndDate;
+    private LocalDate signatureEndDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
     private DurationType durationType;
 

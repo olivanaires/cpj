@@ -28,6 +28,10 @@ class ContractService {
         return  axios.get(API_URL + 'list/with-end-date-this-month', {headers: authHeader()});
     }
 
+    loadPayments(id) {
+        return  axios.get(API_URL + `list/payments/${id}`, {headers: authHeader()});
+    }
+
 }
 
 export default new ContractService();

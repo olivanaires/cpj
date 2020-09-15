@@ -5,6 +5,7 @@
         </b-pagination>
 
         <b-table id="my-table" striped hover show-empty
+                 empty-text="Não existe contratos a vencer esse mês"
                  :items="contracts"
                  :fields="fields"
                  :per-page="perPage"

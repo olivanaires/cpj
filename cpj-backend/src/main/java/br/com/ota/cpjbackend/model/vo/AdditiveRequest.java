@@ -5,14 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class AdditiveRequest {
 
-    private Date signatureDate;
+    private LocalDate signatureDate;
 
     private Integer duration;
 
@@ -20,6 +20,6 @@ public class AdditiveRequest {
 
     private BigDecimal paymentValue;
 
-    private Date endDate;
+    private LocalDate endDate;
 
 }

@@ -36,7 +36,7 @@
                         </b-row>
 
                         <b-row>
-                            <b-form-group label="Clientes" class="col-md-6">
+                            <b-form-group label="Clientes *" class="col-md-6">
                                 <b-form-select class="col-md-10" v-model="contractor" value-field="cpfCnpj"
                                                text-field="clientName"
                                                :options="clientList"/>
@@ -44,7 +44,7 @@
                                 </b-button>
                             </b-form-group>
 
-                            <b-form-group label="Advogados" class="col-md-6">
+                            <b-form-group label="Advogados *" class="col-md-6">
                                 <b-form-select class="col-md-10" v-model="employee" value-field="oabNumber"
                                                text-field="name"
                                                :options="lawyerList"/>
@@ -55,7 +55,8 @@
 
                         <b-row>
                             <b-form-group label="" class="col-md-6">
-                                <b-table class="testeTable" :items="selectedContractors" :fields="clientFields">
+                                <b-table class="testeTable" :items="selectedContractors" :fields="clientFields"
+                                         show-empty empty-text="Informe um ou mais clientes">
                                     <template v-slot:cell(options)="data">
                                         <b-link v-on:click="removeClient(data.item.cpfCnpj)"
                                                 v-b-tooltip.hover title="Apagar">
@@ -65,7 +66,8 @@
                                 </b-table>
                             </b-form-group>
                             <b-form-group label="" class="col-md-6">
-                                <b-table :items="selectedLawyers" :fields="lawyerFields">
+                                <b-table :items="selectedLawyers" :fields="lawyerFields"
+                                         show-empty empty-text="Informe um ou mais adivogados">
                                     <template v-slot:cell(options)="data">
                                         <b-link v-on:click="removeLawyer(data.item.oabNumber)"
                                                 v-b-tooltip.hover title="Apagar">

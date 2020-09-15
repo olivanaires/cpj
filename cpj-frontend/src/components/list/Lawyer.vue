@@ -68,7 +68,8 @@
                     {
                         key: 'options',
                         label: 'Opções',
-                        thClass: 'bg-dark text-white'
+                        thClass: 'center bg-dark text-white',
+                        tdClass: 'center'
                     }
                 ]
             }
