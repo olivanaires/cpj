@@ -16,12 +16,16 @@
                         {{ data.index + 1 }}
                     </template>
                     <template v-slot:cell(contract)="data">
-                        {{ data.item.contract.number + ' - ' + data.item.contract.description }}
+                        {{ data.item.contract.number }}
                     </template>
                     <template v-slot:cell(options)="data">
-                        <b-link :to="`/honoraryUpdate/${data.item.id}`" class="option-item"
+                        <b-link :to="`/honoraryUpdate/${data.item.id}`" v-if="!data.item.payed" class="option-item"
                                 v-b-tooltip.hover title="Editar">
                             <b-icon icon="pencil"></b-icon>
+                        </b-link>
+                        <b-link v-on:click="remove(data.item.id)" class="option-item"
+                                v-b-tooltip.hover title="Apagar">
+                            <b-icon icon="trash"></b-icon>
                         </b-link>
                     </template>
                 </b-table>
@@ -82,6 +86,13 @@
                         thClass: 'bg-dark text-white'
                     },
                     {
+                        key: 'payed',
+                        label: 'Pago?',
+                        sortable: true,
+                        thClass: 'bg-dark text-white',
+                        formatter: "formatBoolean"
+                    },
+                    {
                         key: 'options',
                         label: 'Opções',
                         thClass: 'center bg-dark text-white',
@@ -128,12 +139,23 @@
             formatDateAssigned(value) {
                 return moment(String(value), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY');
             },
+            formatBoolean(value) {
+                return value ? 'Sim' : 'Não';
+            },
             formatCurrency(value) {
                 let formatter = new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                 });
                 return formatter.format(value);
+            },
+            remove(id) {
+                HonoraryService.remove(id)
+                    .then(response => {
+                        this.$swal({icon: 'success', title: response.data.message})
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}))
+                    .finally(() => HonoraryService.list().then(response => this.list = response.data));
             }
         }
     }

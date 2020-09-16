@@ -2,10 +2,8 @@ package br.com.ota.cpjbackend.service;
 
 import br.com.ota.cpjbackend.configuration.util.MessagePropertie;
 import br.com.ota.cpjbackend.exception.AppException;
-import br.com.ota.cpjbackend.model.Additive;
-import br.com.ota.cpjbackend.model.Client;
-import br.com.ota.cpjbackend.model.Contract;
-import br.com.ota.cpjbackend.model.Lawyer;
+import br.com.ota.cpjbackend.model.*;
+import br.com.ota.cpjbackend.model.enums.PaymentType;
 import br.com.ota.cpjbackend.model.vo.ContractRequest;
 import br.com.ota.cpjbackend.model.vo.PaymentResponse;
 import br.com.ota.cpjbackend.repository.*;
@@ -28,6 +26,7 @@ public class ContractService {
     private final LawyerRepository lawyerRepository;
     private final FileRepository fileRepository;
     private final PaymentRepository paymentRepository;
+    private final HonoraryRepository honoraryRepository;
 
     public Long create(ContractRequest contractRequest) throws AppException {
 
@@ -83,15 +82,18 @@ public class ContractService {
         List<PaymentResponse> paymentsByContract = paymentRepository.findAllByContractId(Long.parseLong(contractId));
         SortedSet<PaymentResponse> payments = new TreeSet<>(paymentsByContract);
 
+        List<PaymentResponse> honoraries = honoraryRepository.findAllPaymentsByContractId(Long.parseLong(contractId));
+        payments.addAll(honoraries);
+
         LocalDate signatureDate = contract.getSignatureDate();
         LocalDate endDate = Objects.nonNull(contract.getSignatureEndDate()) ? contract.getSignatureEndDate() : LocalDate.of(signatureDate.getYear(), 12, signatureDate.getDayOfMonth());
         long qtdMonths = ChronoUnit.MONTHS.between(signatureDate, endDate);
 
         PaymentResponse pr;
         for (int i = 0; i < qtdMonths; i++) {
-            pr = new PaymentResponse(messagePropertie.getMessage("message.contract.month.payment", String.valueOf(i + 1)),
+            pr = new PaymentResponse(null, messagePropertie.getMessage("message.contract.month.payment", String.valueOf(i + 1)),
                     signatureDate.plusMonths(i),
-                    contract.getPaymentSignatureValue(), false);
+                    contract.getPaymentSignatureValue(), PaymentType.MONTHLY, false);
             payments.add(pr);
         }
 
@@ -104,9 +106,9 @@ public class ContractService {
                 qtdMonths = ChronoUnit.MONTHS.between(signatureDate, endDate);
 
                 for (int i = 0; i < qtdMonths; i++) {
-                    pr = new PaymentResponse(messagePropertie.getMessage("message.additive.month.payment", String.valueOf(i + 1), String.valueOf(count)),
+                    pr = new PaymentResponse(null, messagePropertie.getMessage("message.additive.month.payment", String.valueOf(i + 1), String.valueOf(count)),
                             signatureDate.plusMonths(i),
-                            additive.getPaymentValue(), false);
+                            additive.getPaymentValue(), PaymentType.MONTHLY, false);
                     payments.add(pr);
                 }
 

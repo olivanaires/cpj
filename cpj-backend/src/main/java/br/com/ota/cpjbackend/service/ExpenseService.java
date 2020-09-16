@@ -16,7 +16,7 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final MessagePropertie messagePropertie;
 
-    public void create(Expense expense) {
+    public void save(Expense expense) {
         expenseRepository.save(expense);
     }
 

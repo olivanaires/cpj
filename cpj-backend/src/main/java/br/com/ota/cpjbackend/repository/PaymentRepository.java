@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PaymentRepository extends BaseRepository<Payment, Long>  {
 
-    @Query(value = "select new br.com.ota.cpjbackend.model.vo.PaymentResponse(p.description, p.date, p.paymentValue, true) from Payment p where p.contract.id = ?1")
+    @Query(value = "select new br.com.ota.cpjbackend.model.vo.PaymentResponse(p.id, p.description, p.date, p.paymentValue, p.paymentType, true) from Payment p where p.contract.id = ?1")
     List<PaymentResponse> findAllByContractId(Long contractId);
 
 }

@@ -44,6 +44,7 @@ public class Contract extends BaseEntity {
     private LocalDate paymentDate;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private DurationType durationType;
 
     @NotNull

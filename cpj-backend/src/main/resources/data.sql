@@ -1,4 +1,6 @@
--- update contracts set signature_end_date=end_date;
--- update files set contract_id=(select co.id from contracts co where co.file_id=files.id)
--- update contracts set payment_signature_value=payment_value;
--- alter table contracts alter column end_date drop not null;
+select now();
+-- update payments set payment_type = 'MONTHLY';
+-- alter table contracts alter column duration_type type varchar(10);
+-- update contracts set duration_type='UNIQUE' where duration_type='0';
+-- update contracts set duration_type='MONTH' where duration_type='1';
+-- update contracts set duration_type='YEAR' where duration_type='2';

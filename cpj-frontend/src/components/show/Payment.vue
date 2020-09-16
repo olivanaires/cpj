@@ -84,7 +84,10 @@
                 return formatter.format(value);
             },
             pay(payment) {
-                const indexOf = this.payments.findIndex(item => item.description === payment.description && item.date === payment.date);
+                const indexOf = this.payments.findIndex(item => item.description === payment.description
+                                                             && item.paymentType === payment.paymentType
+                                                             && item.date === payment.date);
+
                 payment = new Payment(payment, this.contractId);
                 ContractService.receivePayment(payment)
                     .then(response => {

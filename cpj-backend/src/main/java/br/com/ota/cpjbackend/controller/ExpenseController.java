@@ -22,7 +22,7 @@ public class ExpenseController {
 
     @PostMapping("/create")
     public ResponseEntity<MessageResponse> create(@Valid @RequestBody Expense expense) {
-        expenseService.create(expense);
+        expenseService.save(expense);
         return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.expense")));
     }
 

@@ -16,7 +16,7 @@
                         {{ data.index + 1 }}
                     </template>
                     <template v-slot:cell(contract)="data">
-                        {{ data.item.contract.number + ' - ' + data.item.contract.description }}
+                        {{ data.item.contract.number }}
                     </template>
                     <template v-slot:cell(options)="data">
                         <b-link :to="`/expenseUpdate/${data.item.id}`" class="option-item"
@@ -76,6 +76,13 @@
                         thClass: 'bg-dark text-white'
                     },
                     {
+                        key: 'payed',
+                        label: 'Pago?',
+                        sortable: true,
+                        thClass: 'bg-dark text-white',
+                        formatter: "formatBoolean"
+                    },
+                    {
                         key: 'options',
                         label: 'Opções',
                         thClass: 'center bg-dark text-white',
@@ -121,6 +128,9 @@
         methods: {
             formatDateAssigned(value) {
                 return moment(String(value), "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY');
+            },
+            formatBoolean(value) {
+                return value ? 'Sim' : 'Não';
             },
             formatCurrency(value) {
                 let formatter = new Intl.NumberFormat('pt-BR', {

@@ -1,5 +1,6 @@
 package br.com.ota.cpjbackend.model.vo;
 
+import br.com.ota.cpjbackend.model.enums.PaymentType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,11 +11,15 @@ import java.time.LocalDate;
 @Setter
 public class PaymentRequest {
 
+    private Long id;
+
     private String description;
 
     private LocalDate date;
 
     private BigDecimal paymentValue;
+
+    private PaymentType paymentType;
 
     private Long contractId;
 
