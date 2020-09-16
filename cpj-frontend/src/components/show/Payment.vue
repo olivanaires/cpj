@@ -5,7 +5,7 @@
                 <b-row>
                     <b-form-group label="Pagamentos Contrato" class="col-md-12">
                         <b-table :fields="paymentFields" :items="payments"
-                                 show-empty empty-text="Sem aditivos">
+                                 show-empty empty-text="Sem pagamentos">
 
                             <template v-slot:cell(date)="data">
                                 {{ formatDateValue(data.item.date) }}
@@ -21,7 +21,7 @@
 
                             <template v-slot:cell(options)="data" >
                                 <b-link v-on:click="pay(data.item)" v-if="!data.item.payed" class="option-item"
-                                        v-b-tooltip.hover title="Abrir PDF">
+                                        v-b-tooltip.hover title="Receber Pagamento">
                                     <b-icon icon="check-square"></b-icon>
                                 </b-link>
                             </template>

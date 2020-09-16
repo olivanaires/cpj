@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -85,7 +86,7 @@ public class ContractService {
 
         LocalDate signatureDate = contract.getSignatureDate();
         LocalDate endDate = Objects.nonNull(contract.getSignatureEndDate()) ? contract.getSignatureEndDate() : LocalDate.of(signatureDate.getYear(), 12, signatureDate.getDayOfMonth());
-        int qtdMonths = Period.between(signatureDate, endDate).getMonths();
+        long qtdMonths = ChronoUnit.MONTHS.between(signatureDate, endDate);
 
         PaymentResponse pr;
         for (int i = 0; i < qtdMonths; i++) {
@@ -101,7 +102,7 @@ public class ContractService {
                 count++;
                 signatureDate = additive.getSignatureDate();
                 endDate = additive.getSignatureEndDate();
-                qtdMonths = Period.between(signatureDate, endDate).getMonths();
+                qtdMonths = ChronoUnit.MONTHS.between(signatureDate, endDate);
 
                 for (int i = 0; i < qtdMonths; i++) {
                     pr = new PaymentResponse(messagePropertie.getMessage("message.additive.month.payment", String.valueOf(i + 1), String.valueOf(count)),
