@@ -2,14 +2,35 @@
     <div class="container">
         <main>
             <section class="container flex">
+                <b-card :header="thisMonthEndDate" header-class="header-title">
+                    <b-card-body>
+                        <c-contract-end-date-this-month></c-contract-end-date-this-month>
+                    </b-card-body>
+                </b-card>
                 <b-card :header="thisMonthPayments" header-class="header-title">
                     <b-card-body>
                         <c-contract-payments-this-month></c-contract-payments-this-month>
                     </b-card-body>
                 </b-card>
-                <b-card :header="thisMonthEndDate" header-class="header-title">
+            </section>
+            <br/>
+            <section class="container flex">
+                <b-card :header="thisMonthHonoraries" header-class="header-title">
                     <b-card-body>
-                        <c-contract-end-date-this-month></c-contract-end-date-this-month>
+                        Para Implementar
+                    </b-card-body>
+                </b-card>
+                <b-card :header="thisMonthExpenses" header-class="header-title">
+                    <b-card-body>
+                        Para Implementar
+                    </b-card-body>
+                </b-card>
+            </section>
+            <br/>
+            <section class="container flex">
+                <b-card :header="thisMonthOthersPayments" header-class="header-title">
+                    <b-card-body>
+                        Para Implementar
                     </b-card-body>
                 </b-card>
             </section>
@@ -27,8 +48,11 @@
         components: {CContractEndDateThisMonth, CContractPaymentsThisMonth},
         data() {
             return {
-                thisMonthPayments: 'Pagamentos a Receber',
+                thisMonthPayments: 'Pagamento de Contratos',
                 thisMonthEndDate: 'Contratos a Vencer',
+                thisMonthHonoraries: 'Pagamento de Honorários',
+                thisMonthExpenses: 'Pagamento de Despesas',
+                thisMonthOthersPayments: 'Outros Pagamentos',
                 content: '',
             };
         },
