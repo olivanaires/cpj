@@ -10,4 +10,16 @@ export default class Expense {
         this.refundable = true;
     }
 
+    defaults() {
+        return {
+            description: '',
+            date: new Date(),
+            paymentValue: '',
+            contract: new Contract(),
+            refundable: false,
+            payed: false,
+        }
+    }
+
+
 }

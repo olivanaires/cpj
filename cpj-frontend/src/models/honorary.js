@@ -10,4 +10,15 @@ export default class Honorary {
         this.parcels = 1;
     }
 
+    defaults() {
+        return {
+            description: '',
+            date: new Date(),
+            paymentValue: '',
+            contract: new Contract(),
+            parcels: 1,
+            payed: false,
+        }
+    }
+
 }

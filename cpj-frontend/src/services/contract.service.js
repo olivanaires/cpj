@@ -32,6 +32,10 @@ class ContractService {
         return  axios.get(API_URL + `list/payments/${id}`, {headers: authHeader()});
     }
 
+    receivePayment(payment) {
+        return  axios.post(API_URL + 'receve-payment', payment, {headers: authHeader()});
+    }
+
 }
 
 export default new ContractService();

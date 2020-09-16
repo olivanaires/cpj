@@ -35,7 +35,6 @@ public class Address extends BaseEntity {
     @Size(max = 9)
     private String postalCode;
 
-    //    @ManyToOne
     @NotBlank
     @Size(max = 50)
     private String city;

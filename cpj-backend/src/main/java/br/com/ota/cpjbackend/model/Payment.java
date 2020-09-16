@@ -1,5 +1,6 @@
 package br.com.ota.cpjbackend.model;
 
+import br.com.ota.cpjbackend.model.vo.PaymentRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -34,5 +35,12 @@ public class Payment extends BaseEntity {
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Contract contract;
+
+    public Payment(PaymentRequest paymentRequest, Contract contract) {
+        this.description = paymentRequest.getDescription();
+        this.date = paymentRequest.getDate();
+        this.paymentValue = paymentRequest.getPaymentValue();
+        this.contract = contract;
+    }
 
 }

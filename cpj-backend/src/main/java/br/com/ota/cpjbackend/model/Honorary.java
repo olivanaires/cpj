@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -26,7 +26,7 @@ public class Honorary extends BaseEntity {
     @Size(max = 200)
     private String description;
 
-    private Date date;
+    private LocalDate date;
 
     @NotNull
     private BigDecimal paymentValue;

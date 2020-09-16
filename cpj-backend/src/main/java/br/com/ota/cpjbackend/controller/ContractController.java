@@ -5,13 +5,11 @@ import br.com.ota.cpjbackend.exception.AppException;
 import br.com.ota.cpjbackend.model.Additive;
 import br.com.ota.cpjbackend.model.Contract;
 import br.com.ota.cpjbackend.model.enums.ContractType;
-import br.com.ota.cpjbackend.model.vo.ContractRequest;
-import br.com.ota.cpjbackend.model.vo.FileResponse;
-import br.com.ota.cpjbackend.model.vo.MessageResponse;
-import br.com.ota.cpjbackend.model.vo.PaymentResponse;
+import br.com.ota.cpjbackend.model.vo.*;
 import br.com.ota.cpjbackend.repository.FileRepository;
 import br.com.ota.cpjbackend.service.AdditiveService;
 import br.com.ota.cpjbackend.service.ContractService;
+import br.com.ota.cpjbackend.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +28,7 @@ public class ContractController {
     private final ContractService contractService;
     private final AdditiveService additiveService;
     private final FileRepository fileRepository;
+    private final PaymentService paymentService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody ContractRequest contractRequest) {
@@ -111,10 +110,15 @@ public class ContractController {
         return ResponseEntity.ok(contracts);
     }
 
-    @PutMapping
-    public ResponseEntity<?> receivePayment() {
-
-        return null;
+    @PostMapping("/receve-payment")
+    public ResponseEntity<?> receivePayment(@RequestBody PaymentRequest paymentRequest) {
+        try {
+            paymentService.save(paymentRequest);
+            return ResponseEntity.ok(new MessageResponse(messagePropertie.getMessage("message.created.success", "model.payment")));
+        } catch (AppException e) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse(e.getMessage()));
+        }
     }
 
 }

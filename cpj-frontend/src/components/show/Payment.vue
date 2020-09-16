@@ -3,7 +3,7 @@
         <b-card class="col-md-12">
             <b-card-body>
                 <b-row>
-                    <b-form-group label="Pagamentos Contrato" class="col-md-12">
+                    <b-form-group label="" class="col-md-12">
                         <b-table :fields="paymentFields" :items="payments"
                                  show-empty empty-text="Sem pagamentos">
 
@@ -19,7 +19,7 @@
                                 {{ data.item.payed ? 'Sim' : 'Não'}}
                             </template>
 
-                            <template v-slot:cell(options)="data" >
+                            <template v-slot:cell(options)="data">
                                 <b-link v-on:click="pay(data.item)" v-if="!data.item.payed" class="option-item"
                                         v-b-tooltip.hover title="Receber Pagamento">
                                     <b-icon icon="check-square"></b-icon>
@@ -35,11 +35,14 @@
 
 <script>
     import moment from 'moment';
+    import Payment from "../../models/payment";
+    import ContractService from '../../services/contract.service';
 
     export default {
         name: 'c-payment-show',
         props: {
             payments: {required: true},
+            contractId: {required: true},
         },
         data() {
             return {
@@ -80,9 +83,15 @@
                 });
                 return formatter.format(value);
             },
-            pay(value) {
-                console.log(value);
-                this.$swal({icon: 'warning', title: 'Funcionalidade ainda não foi implementada.'});
+            pay(payment) {
+                const indexOf = this.payments.findIndex(item => item.description === payment.description && item.date === payment.date);
+                payment = new Payment(payment, this.contractId);
+                ContractService.receivePayment(payment)
+                    .then(response => {
+                        this.payments[indexOf].payed = true;
+                        this.$swal({icon: 'success', title: response.data.message})
+                    })
+                    .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             }
         }
     }

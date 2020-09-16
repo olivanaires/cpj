@@ -6,12 +6,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -24,7 +26,7 @@ public class Expense extends BaseEntity {
     @Size(max = 200)
     private String description;
 
-    private Date date;
+    private LocalDate date;
 
     @NotNull
     private BigDecimal paymentValue;

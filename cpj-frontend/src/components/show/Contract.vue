@@ -78,7 +78,7 @@
         </b-row>
 
         <b-modal id="show-payments" title="Visualizar Pagamentos" centered size="xl" hide-footer scrollable>
-            <c-payment-show :payments="payments" />
+            <c-payment-show :payments="payments" :contract-id="contractId" />
         </b-modal>
     </div>
 </template>
@@ -217,6 +217,7 @@
             },
             showPayments() {
                 ContractService.loadPayments(this.contractId).then(response => {
+                    this.payments = [];
                     this.payments.push(...response.data);
                 });
             }
