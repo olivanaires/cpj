@@ -111,4 +111,10 @@ public class ContractController {
         return ResponseEntity.ok(contracts);
     }
 
+    @PutMapping
+    public ResponseEntity<?> receivePayment() {
+
+        return null;
+    }
+
 }
