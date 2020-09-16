@@ -54,7 +54,7 @@
             }
         },
         created() {
-            ContractService.list()
+            ContractService.listWithHonorary()
                 .then(response => {
                     this.contractOptions = response.data.map(c => {
                         return {item: String(c.id), name: `${c.number} - ${c.contractors[0].clientName}`};

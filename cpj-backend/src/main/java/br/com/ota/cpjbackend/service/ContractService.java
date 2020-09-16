@@ -56,6 +56,10 @@ public class ContractService {
         return contractRepository.findAll();
     }
 
+    public List<Contract> listWithHonorary() {
+        return contractRepository.findAllByPaymentTypeIsIn(PaymentType.HONORARY, PaymentType.MONTHLY_HONORARY, PaymentType.YEARLY_HONORARY);
+    }
+
     public Contract load(String id) throws AppException {
         return contractRepository.findById(Long.parseLong(id))
                 .orElseThrow(() -> new AppException(messagePropertie.getMessage("message.model.not.found", "model.contract")));
@@ -87,35 +91,63 @@ public class ContractService {
 
         LocalDate signatureDate = contract.getSignatureDate();
         LocalDate endDate = Objects.nonNull(contract.getSignatureEndDate()) ? contract.getSignatureEndDate() : LocalDate.of(signatureDate.getYear(), 12, signatureDate.getDayOfMonth());
-        long qtdMonths = ChronoUnit.MONTHS.between(signatureDate, endDate);
+        long qtdPayments;
 
         PaymentResponse pr;
-        for (int i = 0; i < qtdMonths; i++) {
-            pr = new PaymentResponse(null, messagePropertie.getMessage("message.contract.month.payment", String.valueOf(i + 1)),
-                    signatureDate.plusMonths(i),
-                    contract.getPaymentSignatureValue(), PaymentType.MONTHLY, false);
-            payments.add(pr);
+        if(PaymentType.MONTHLY.equals(contract.getPaymentType()) || PaymentType.MONTHLY_HONORARY.equals(contract.getPaymentType())) {
+            qtdPayments = ChronoUnit.MONTHS.between(signatureDate, endDate);
+            for (int i = 0; i < qtdPayments; i++) {
+                pr = new PaymentResponse(null, messagePropertie.getMessage("message.contract.month.payment", String.valueOf(i + 1)),
+                        signatureDate.plusMonths(i),
+                        contract.getPaymentSignatureValue(), PaymentType.MONTHLY, false);
+                payments.add(pr);
+            }
+        } else if(PaymentType.YEARLY.equals(contract.getPaymentType()) || PaymentType.YEARLY_HONORARY.equals(contract.getPaymentType())) {
+            qtdPayments = ChronoUnit.YEARS.between(signatureDate, endDate);
+            for (int i = 0; i < qtdPayments; i++) {
+                pr = new PaymentResponse(null, messagePropertie.getMessage("message.contract.yearly.payment", String.valueOf(i + 1)),
+                        signatureDate.plusYears(i),
+                        contract.getPaymentSignatureValue(), PaymentType.YEARLY, false);
+                payments.add(pr);
+            }
         }
 
         if (!CollectionUtils.isEmpty(contract.getAdditives())) {
-            int count = 0;
-            for (Additive additive : contract.getAdditives()) {
-                count++;
-                signatureDate = additive.getSignatureDate();
-                endDate = additive.getSignatureEndDate();
-                qtdMonths = ChronoUnit.MONTHS.between(signatureDate, endDate);
+            generateAdditivesPayments(contract, payments);
+        }
 
-                for (int i = 0; i < qtdMonths; i++) {
+        return payments;
+    }
+
+    private void generateAdditivesPayments(Contract contract, SortedSet<PaymentResponse> payments) {
+        LocalDate signatureDate;
+        LocalDate endDate;
+        long qtdPayments;
+        PaymentResponse pr;
+        int count = 0;
+        for (Additive additive : contract.getAdditives()) {
+            count++;
+            signatureDate = additive.getSignatureDate();
+            endDate = additive.getSignatureEndDate();
+
+            if(PaymentType.MONTHLY.equals(contract.getPaymentType()) || PaymentType.MONTHLY_HONORARY.equals(contract.getPaymentType())) {
+                qtdPayments = ChronoUnit.MONTHS.between(signatureDate, endDate);
+                for (int i = 0; i < qtdPayments; i++) {
                     pr = new PaymentResponse(null, messagePropertie.getMessage("message.additive.month.payment", String.valueOf(i + 1), String.valueOf(count)),
                             signatureDate.plusMonths(i),
                             additive.getPaymentValue(), PaymentType.MONTHLY, false);
                     payments.add(pr);
                 }
-
+            } else if(PaymentType.YEARLY.equals(contract.getPaymentType()) || PaymentType.YEARLY_HONORARY.equals(contract.getPaymentType())) {
+                qtdPayments = ChronoUnit.YEARS.between(signatureDate, endDate);
+                for (int i = 0; i < qtdPayments; i++) {
+                    pr = new PaymentResponse(null, messagePropertie.getMessage("message.additive.yearly.payment", String.valueOf(i + 1), String.valueOf(count)),
+                            signatureDate.plusYears(i),
+                            contract.getPaymentSignatureValue(), PaymentType.YEARLY, false);
+                    payments.add(pr);
+                }
             }
         }
-
-        return payments;
     }
 
     public List<Contract> contractsWithPaymentForCurrentlyMonth() {

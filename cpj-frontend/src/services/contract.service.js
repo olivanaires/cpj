@@ -12,6 +12,10 @@ class ContractService {
         return axios.get(API_URL + 'list', {headers: authHeader()})
     }
 
+    listWithHonorary() {
+        return axios.get(API_URL + 'list-with-honorary', {headers: authHeader()})
+    }
+
     load(id) {
         return axios.get(API_URL + `load/${id}`, {headers: authHeader()});
     }

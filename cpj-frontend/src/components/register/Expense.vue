@@ -25,7 +25,7 @@
 
                         <b-form-row class="check-box-row">
                             <b-form-checkbox v-model="expense.refundable">
-                                Contabilizar nos gastos do contrado?
+                                Contabilizar nos gastos a serem ressarcidos?
                             </b-form-checkbox>
                         </b-form-row>
 
@@ -70,8 +70,6 @@
                 ExpenseService.load(this.id)
                     .then(response => {
                         this.expense = response.data;
-                        // this.expense.date = new Date(response.data.date);
-                        // this.expense.contract.id = String(response.data.contract.id);
                     })
                     .catch(error => this.$swal({icon: 'error', title: error.response.data.message}));
             }

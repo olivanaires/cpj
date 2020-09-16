@@ -53,6 +53,12 @@ public class ContractController {
         return ResponseEntity.ok(all);
     }
 
+    @GetMapping("/list-with-honorary")
+    public ResponseEntity<?> listWithHonorary() {
+        List<Contract> all = contractService.listWithHonorary();
+        return ResponseEntity.ok(all);
+    }
+
     @GetMapping("/load/{id}")
     public ResponseEntity<?> load(@PathVariable String id) {
         try {

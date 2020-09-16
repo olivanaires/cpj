@@ -3,11 +3,14 @@ package br.com.ota.cpjbackend.repository;
 import br.com.ota.cpjbackend.model.Client;
 import br.com.ota.cpjbackend.model.Contract;
 import br.com.ota.cpjbackend.model.Lawyer;
+import br.com.ota.cpjbackend.model.enums.PaymentType;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface ContractRepository extends BaseRepository<Contract, Long> {
+
+    List<Contract> findAllByPaymentTypeIsIn(PaymentType... paymentTypes);
 
     List<Contract> findAllByContractorsContains( Client contractor );
 

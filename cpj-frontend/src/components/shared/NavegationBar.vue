@@ -11,52 +11,77 @@
                 <b-navbar-nav class="nav-bar-text">
                     <b-nav-item v-if="currentUser" to="/home">
                         <b-icon icon="house"></b-icon>
-                        Home
+                        {{home}}
                     </b-nav-item>
-                    <!-- CADASTRO -->
-                    <b-nav-item-dropdown v-if="currentUser" right>
+
+                    <b-nav-item-dropdown v-if="currentUser" left>
                         <template v-slot:button-content>
-                            <b-icon icon="plus-square"></b-icon>
-                            Cadastro
+                            <b-icon icon="person"></b-icon>
+                            {{user}}
                         </template>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">Usuário</b-dropdown-item>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/lawyerRegister">Advogado</b-dropdown-item>
-                        <b-dropdown-item to="/clientRegister">Cliente</b-dropdown-item>
-                        <b-dropdown-item to="/contractRegister">Contrato</b-dropdown-item>
-                        <b-dropdown-item to="/additiveRegister">Aditivo</b-dropdown-item>
-                        <b-dropdown-item to="/honoraryRegister">Honorário</b-dropdown-item>
-                        <b-dropdown-item to="/expenseRegister">Despesa</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userRegister">{{create}}</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userList">{{list}}</b-dropdown-item>
                     </b-nav-item-dropdown>
-                    <!-- LISTAGEM -->
-                    <b-nav-item-dropdown v-if="currentUser" right>
+
+                    <b-nav-item-dropdown v-if="currentUser" left>
                         <template v-slot:button-content>
-                            <b-icon icon="card-list"></b-icon>
-                            Listagem
+                            <b-icon icon="person-circle"></b-icon>
+                            {{lawyer}}
                         </template>
-                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/userList">Usuário</b-dropdown-item>
-                        <b-dropdown-item v-if="currentUser" to="/lawyerList">Advogado</b-dropdown-item>
-                        <b-dropdown-item to="/clientList">Cliente</b-dropdown-item>
-                        <b-dropdown-item to="/contractList">Contrato</b-dropdown-item>
-                        <b-dropdown-item to="/honoraryList">Honorário</b-dropdown-item>
-                        <b-dropdown-item to="/expenseList">Despesa</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser && hasRole('ROLE_ADMIN')" to="/lawyerRegister">{{create}}</b-dropdown-item>
+                        <b-dropdown-item v-if="currentUser" to="/lawyerList">{{list}}</b-dropdown-item>
+                    </b-nav-item-dropdown>
+
+                    <b-nav-item-dropdown v-if="currentUser" left>
+                        <template v-slot:button-content>
+                            <b-icon icon="people"></b-icon>
+                            {{client}}
+                        </template>
+                        <b-dropdown-item to="/clientRegister">{{create}}</b-dropdown-item>
+                        <b-dropdown-item to="/clientList">{{list}}</b-dropdown-item>
+                    </b-nav-item-dropdown>
+
+                    <b-nav-item-dropdown v-if="currentUser" left>
+                        <template v-slot:button-content>
+                            <b-icon icon="file-earmark-text"></b-icon>
+                            {{contract}}
+                        </template>
+                        <b-dropdown-item to="/contractRegister">{{create}}</b-dropdown-item>
+                        <b-dropdown-item to="/contractList">{{list}}</b-dropdown-item>
+                        <b-dropdown-item to="/additiveRegister">{{additive}}</b-dropdown-item>
+                    </b-nav-item-dropdown>
+
+                    <b-nav-item-dropdown v-if="currentUser" left>
+                        <template v-slot:button-content>
+                            <b-icon icon="file-plus"></b-icon>
+                            {{honorary}}
+                        </template>
+                        <b-dropdown-item to="/honoraryRegister">{{create}}</b-dropdown-item>
+                        <b-dropdown-item to="/honoraryList">{{list}}</b-dropdown-item>
+                    </b-nav-item-dropdown>
+
+                    <b-nav-item-dropdown v-if="currentUser" left>
+                        <template v-slot:button-content>
+                            <b-icon icon="file-minus"></b-icon>
+                            {{expense}}
+                        </template>
+                        <b-dropdown-item to="/expenseRegister">{{create}}</b-dropdown-item>
+                        <b-dropdown-item to="/expenseList">{{list}}</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav v-if="currentUser" class="ml-auto nav-bar-text">
                     <b-nav-item-dropdown right>
-                        <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
                             <b-icon icon="gear"></b-icon>
                             {{ currentUser.name ? currentUser.name : currentUser.username }}
                         </template>
                         <b-dropdown-item to="/profile">
-<!--                            <b-icon icon="person-fill"></b-icon>-->
-                            Perfil
+                            {{profile}}
                         </b-dropdown-item>
                         <b-dropdown-item @click.prevent="logOut">
-<!--                            <b-icon icon="box-arrow-right"></b-icon>-->
-                            Sair
+                            {{exit}}
                         </b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
@@ -67,6 +92,22 @@
 
 <script>
     export default {
+        data() {
+            return {
+                home: 'Início',
+                user: 'Usuário',
+                lawyer: 'Advogado',
+                client: 'Cliente',
+                contract: 'Contrato',
+                honorary: 'Honorário',
+                expense: 'Despesa',
+                additive: 'Aditivo',
+                create: 'Cadastro',
+                list: 'Listagem',
+                profile: 'Perfil',
+                exit: 'Sair',
+            }
+        },
         computed: {
             currentUser() {
                 return this.$store.state.auth.user;
