@@ -17,12 +17,12 @@
             <section class="container flex">
                 <b-card :header="thisMonthHonoraries" header-class="header-title">
                     <b-card-body>
-                        Para Implementar
+                        <c-contract-honoraries-this-month></c-contract-honoraries-this-month>
                     </b-card-body>
                 </b-card>
                 <b-card :header="thisMonthExpenses" header-class="header-title">
                     <b-card-body>
-                        Para Implementar
+                        <c-contract-expenses-this-month>    </c-contract-expenses-this-month>
                     </b-card-body>
                 </b-card>
             </section>
@@ -42,10 +42,14 @@
     import UserService from '../services/user.service';
     import CContractPaymentsThisMonth from "../components/report/ContractPaymentsThisMonth";
     import CContractEndDateThisMonth from "../components/report/ContractEndDateThisMonth";
+    import CContractHonorariesThisMonth from "../components/report/ContractHonoraryThisMonth";
+    import CContractExpensesThisMonth from "../components/report/ContractExpenseThisMonth";
 
     export default {
         name: 'Home',
-        components: {CContractEndDateThisMonth, CContractPaymentsThisMonth},
+        components: {
+            CContractExpensesThisMonth,
+            CContractHonorariesThisMonth, CContractEndDateThisMonth, CContractPaymentsThisMonth},
         data() {
             return {
                 thisMonthPayments: 'Pagamento de Contratos',

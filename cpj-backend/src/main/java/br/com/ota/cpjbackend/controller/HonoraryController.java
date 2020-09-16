@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -29,6 +30,12 @@ public class HonoraryController {
     @GetMapping("/list")
     public ResponseEntity<?> list() {
         List<Honorary> allHonorarys = honoraryRepository.findAll();
+        return ResponseEntity.ok(allHonorarys);
+    }
+
+    @GetMapping("/list-this-month")
+    public ResponseEntity<?> listThisMonth() {
+        List<Honorary> allHonorarys = honoraryRepository.findAllByDateMonth();
         return ResponseEntity.ok(allHonorarys);
     }
 

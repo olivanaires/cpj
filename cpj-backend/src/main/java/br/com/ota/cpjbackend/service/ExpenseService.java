@@ -36,4 +36,8 @@ public class ExpenseService {
     public void remove(Long id) {
         expenseRepository.deleteById(id);
     }
+
+    public List<Expense> findAllByDateMonth() {
+        return expenseRepository.findAllByDateMonth();
+    }
 }

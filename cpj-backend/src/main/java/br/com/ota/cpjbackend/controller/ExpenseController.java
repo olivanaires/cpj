@@ -32,6 +32,12 @@ public class ExpenseController {
         return ResponseEntity.ok(allExpenses);
     }
 
+    @GetMapping("/list-this-month")
+    public ResponseEntity<?> listThisMonth() {
+        List<Expense> allExpenses = expenseService.findAllByDateMonth();
+        return ResponseEntity.ok(allExpenses);
+    }
+
     @GetMapping("/load/{id}")
     public ResponseEntity<?> load(@PathVariable Long id) {
         try {
